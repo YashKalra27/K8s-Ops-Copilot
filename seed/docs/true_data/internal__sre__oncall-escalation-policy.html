@@ -1,0 +1,28 @@
+<html><head><title>On-call Escalation Policy</title></head><body>
+<h1>On-call Escalation Policy</h1>
+<p>Synthetic internal document for the ADV RAG demo. Defines who is paged, when, and how incidents escalate.</p>
+
+<h2>Rotations</h2>
+<p>Primary and secondary on-call engineers rotate weekly (Monday 10:00 UTC handover). Each page is recorded in
+the oncall_logs table with the engineer, the time paged and the response time in minutes.</p>
+
+<h2>Escalation ladder</h2>
+<ol>
+<li><b>0 minutes</b>: primary on-call is paged.</li>
+<li><b>5 minutes without acknowledgement (P1) / 15 minutes (P2)</b>: secondary on-call is paged.</li>
+<li><b>15 minutes (P1)</b>: engineering manager on duty is paged and an incident commander is assigned.</li>
+<li><b>30 minutes (P1) or any SLA breach</b>: escalate to the Director of Infrastructure and notify customer support.</li>
+</ol>
+
+<h2>SLA breaches</h2>
+<p>A P1 incident breaches SLA when its MTTR exceeds 60 minutes; a P2 breaches when MTTR exceeds 240 minutes.
+Every breach is reviewed in the weekly reliability meeting, and repeated breaches on the same cluster trigger a
+reliability review of that cluster.</p>
+
+<h2>Response expectations</h2>
+<ul>
+<li>Average response time target: under 10 minutes for P1, under 20 minutes for P2.</li>
+<li>Engineers paged more than 15 times in a week are rotated off and the alert noise is reviewed.</li>
+<li>Escalation is never a failure: escalate early when unsure.</li>
+</ul>
+</body></html>

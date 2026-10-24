@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project Brief: K8s Ops Copilot</title>
+<style>
+  @font-face { font-family: "Geist"; src: url("../guide/fonts/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("../guide/fonts/geist-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @page { size: A4; margin: 0; }
+  :root {
+    --ink: #161a24; --note: #4d566a; --line: #d9dce6; --soft: #f3f2fb;
+    --accent: #4f46e5; --accent-2: #9333ea; --accent-ink: #3730a3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 210mm; height: 297mm; background: #fff; color: var(--ink);
+    font-family: "Geist", system-ui, sans-serif; font-size: 9pt; line-height: 1.36;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 210mm; height: 297mm; padding: 9mm; overflow: hidden; }
+  .frame { position: relative; height: 100%; border: 1.6pt solid var(--accent-ink); padding: 1.6mm; }
+  .inner { height: 100%; border: 0.6pt solid #a5a1e6; padding: 6mm 7.5mm 5mm; display: flex; flex-direction: column; }
+
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 6mm; }
+  .kicker { font-size: 8.2pt; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: 19pt; line-height: 1.08; letter-spacing: -.02em; font-weight: 700; margin-top: 1.5mm; }
+  h1 span { color: var(--accent); }
+  .sub { font-size: 9.8pt; color: var(--note); margin-top: 1.2mm; max-width: 128mm; }
+  .badge { flex: none; text-align: right; font-size: 8.2pt; color: var(--note); line-height: 1.5; }
+  .badge b { display: block; font-size: 10pt; color: var(--ink); }
+  .rule { height: 2pt; margin: 3.2mm 0 3mm; background: linear-gradient(90deg, var(--accent), var(--accent-2) 60%, transparent); border-radius: 2pt; }
+
+  h2 { font-size: 10pt; font-weight: 700; color: var(--accent-ink); margin-bottom: 1.1mm; display: flex; align-items: center; gap: 2mm; }
+  h2::before { content: ""; width: 2.2mm; height: 2.2mm; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+  section { margin-bottom: 2.8mm; }
+  p { text-align: justify; }
+  .sub { text-align: left; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 6mm; }
+
+  /* pipeline */
+  .flow { display: flex; align-items: stretch; gap: 0; margin-top: 1mm; }
+  .step { flex: 1; border: 0.8pt solid #c9c6f2; background: var(--soft); border-radius: 2mm; padding: 1.5mm 1.8mm; }
+  .step b { display: block; font-size: 8.3pt; white-space: nowrap; color: var(--accent-ink); }
+  .step small { display: block; font-size: 7.3pt; color: var(--note); line-height: 1.28; margin-top: .5mm; }
+  .arrow { flex: none; width: 3.6mm; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 10pt; }
+  .step.gen { background: linear-gradient(135deg, #ece9ff, #f6ecff); border-color: #b9a8f5; }
+
+  /* techniques */
+  ul.tech { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1mm 6mm; }
+  ul.tech li { padding-left: 3.6mm; position: relative; }
+  ul.tech li::before { content: ""; position: absolute; left: 0; top: 1.4mm; width: 1.5mm; height: 1.5mm; border-radius: .4mm; background: var(--accent); transform: rotate(45deg); }
+  ul.tech b { color: var(--ink); }
+  ul.plain { list-style: none; }
+  ul.plain li { padding-left: 3.6mm; position: relative; margin-bottom: .7mm; }
+  ul.plain li::before { content: ""; position: absolute; left: .4mm; top: 1.5mm; width: 1.3mm; height: 1.3mm; border-radius: 50%; background: var(--accent-2); }
+  .mono { font-family: "Geist Mono", monospace; font-size: 7.9pt; }
+
+  .stack { display: flex; flex-wrap: wrap; gap: 1.4mm; }
+  .chip { border: 0.7pt solid var(--line); border-radius: 10mm; padding: .5mm 2.2mm; font-size: 7.7pt; color: var(--ink); background: #fafafe; }
+  .chip i { font-style: normal; color: var(--note); }
+
+  .spacer { flex: 1; }
+  footer { border-top: 0.8pt solid var(--line); padding-top: 2.8mm; }
+  .presented { text-align: center; font-size: 7.8pt; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--note); margin-bottom: 2mm; }
+  .names { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .names div { display: flex; flex-direction: column; }
+  .names div:nth-child(1) { align-items: flex-start; }
+  .names div:nth-child(2) { align-items: center; }
+  .names div:nth-child(3) { align-items: flex-end; }
+  .person { display: inline-flex; flex-direction: column; align-items: center; }
+  .person b { font-size: 10.6pt; font-weight: 650; }
+  .person span { font-family: "Geist Mono", monospace; font-size: 8.8pt; color: var(--note); margin-top: .4mm; }
+</style>
+</head>
+<body>
+<div class="page"><div class="frame"><div class="inner">
+
+  <header>
+    <div>
+      <div class="kicker">Generative AI · Project Brief</div>
+      <h1>K8s Ops Copilot: <span>a secure, agentic RAG assistant</span></h1>
+      <p class="sub">An LLM-powered copilot that answers questions about Kubernetes operations by retrieving real documentation and querying an incident database, then generating grounded, cited answers in plain English.</p>
+    </div>
+    <div class="badge"><b>Generative AI</b>Subject<br><br><b>LLM · RAG · Agents</b>Focus area</div>
+  </header>
+  <div class="rule"></div>
+
+  <section>
+    <h2>Problem statement</h2>
+    <p>Large Language Models write fluent text but do not know an organisation's private data, and without facts they <b>hallucinate</b>. Site-reliability engineers need answers drawn from unstructured documentation (runbooks, Kubernetes docs) and structured operational data (incidents, on-call logs) at once. A plain chatbot also treats any text as an instruction, leaving it open to <b>prompt injection</b> and data leaks. This project builds a generative assistant whose every answer is grounded in retrieved evidence, routed to the right source and protected by layered guardrails.</p>
+  </section>
+
+  <section>
+    <h2>How a question becomes an answer</h2>
+    <div class="flow">
+      <div class="step"><b>1. Guard</b><small>Auth, rate and token limits, injection classifier, PII redaction</small></div>
+      <div class="arrow">›</div>
+      <div class="step"><b>2. Rewrite</b><small>Follow-ups made standalone using chat memory</small></div>
+      <div class="arrow">›</div>
+      <div class="step"><b>3. Route</b><small>LangGraph agent picks RAG, Text-to-SQL or both</small></div>
+      <div class="arrow">›</div>
+      <div class="step"><b>4. Retrieve</b><small>Hybrid search, HyDE, reranking, grading; SQL after approval</small></div>
+      <div class="arrow">›</div>
+      <div class="step gen"><b>5. Generate</b><small>LLM answers from the evidence only, with sources</small></div>
+      <div class="arrow">›</div>
+      <div class="step"><b>6. Verify</b><small>Self-reflection, moderation, schema check</small></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Generative AI techniques implemented</h2>
+    <ul class="tech">
+      <li><b>Retrieval-Augmented Generation (RAG):</b> answers come only from passages retrieved from a 6,122-chunk vector store.</li>
+      <li><b>Embeddings and hybrid search:</b> dense embeddings plus sparse BM25 keywords, fused with Reciprocal Rank Fusion.</li>
+      <li><b>HyDE:</b> the LLM drafts a hypothetical answer whose embedding finds passages a short question misses.</li>
+      <li><b>Cross-encoder reranking:</b> 20 candidates re-scored by <span class="mono">MiniLM-L-6</span>; the best 5 reach the prompt.</li>
+      <li><b>Corrective RAG (CRAG):</b> an LLM grades each passage and admits uncertainty instead of guessing.</li>
+      <li><b>Self-RAG:</b> the model critiques its own draft and retries with a sharper query.</li>
+      <li><b>Agentic workflow:</b> LangGraph state machine with an LLM intent router and checkpointed state.</li>
+      <li><b>Text-to-SQL with human-in-the-loop:</b> the LLM writes read-only SQL; the graph pauses for human approval.</li>
+      <li><b>Conversational memory:</b> “How do I fix it?” is rewritten as “How do I fix ErrImagePull?”.</li>
+      <li><b>LLM security:</b> 9 layers incl. an injection classifier, hardened system prompt and spotlighting.</li>
+    </ul>
+  </section>
+
+  <div class="grid2">
+    <section>
+      <h2>Key design choices</h2>
+      <ul class="plain">
+        <li><b>Fully offline:</b> open-weight <span class="mono">qwen2.5:3b</span> via Ollama on an 8 GB laptop; GPT-4o by config.</li>
+        <li><b>Stress-tested:</b> a 95% noise, 5% signal corpus makes each RAG technique prove its value.</li>
+        <li><b>Transparent:</b> every pipeline step is streamed live and shown with the answer.</li>
+        <li><b>Efficient:</b> a 5-tier cache avoids repeated LLM and embedding calls.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Outcomes</h2>
+      <ul class="plain">
+        <li>Cited answers with confidence for docs, database and combined questions.</li>
+        <li>ChatGPT-style interface with saved chats and inline SQL approval.</li>
+        <li>Jailbreak attempts stopped before any model sees them.</li>
+        <li>82 automated tests pass; a 10-page beginner's guide.</li>
+      </ul>
+    </section>
+  </div>
+
+  <section>
+    <h2>Technology stack</h2>
+    <div class="stack">
+      <span class="chip"><i>LLM</i> Qwen 2.5 (Ollama) / GPT-4o</span>
+      <span class="chip"><i>Embeddings</i> nomic-embed-text</span>
+      <span class="chip"><i>Orchestration</i> LangGraph</span>
+      <span class="chip"><i>Vector DB</i> Qdrant</span>
+      <span class="chip"><i>Reranker</i> Sentence-Transformers</span>
+      <span class="chip"><i>Guardrails</i> LLM Guard</span>
+      <span class="chip"><i>API</i> FastAPI (Python)</span>
+      <span class="chip"><i>Data</i> PostgreSQL, Redis</span>
+      <span class="chip"><i>Interface</i> React, TypeScript</span>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <footer>
+    <div class="presented">Presented by</div>
+    <div class="names">
+      <div><span class="person"><b>Yash Kalra</b><span>23/IT/178</span></span></div>
+      <div><span class="person"><b>Sumay Mittal</b><span>23/IT/163</span></span></div>
+      <div><span class="person"><b>Vansh Sachdeva</b><span>23/ME/281</span></span></div>
+    </div>
+  </footer>
+
+</div></div></div>
+</body>
+</html>

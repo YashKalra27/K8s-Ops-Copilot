@@ -1,0 +1,89 @@
+@font-face { font-family: "Geist"; src: url("fonts/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Geist Mono"; src: url("fonts/geist-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+
+:root {
+  --bg: #F5F6F8; --sheet: #FCFCFD; --ink: #171A21; --note: #566072; --line: #DDE1E8;
+  --cobalt: #2D5BCB; --wash: #E6ECFA; --wash2: #EEF2FC; --cobalt-ink: #1C3F94;
+  --pine: #1C7A57; --pine-soft: #E3F1EA; --amber: #8F5A05; --amber-soft: #FBF0DC;
+  --brick: #B53D28; --brick-soft: #F8E6E2; --slate: #8A93A6;
+}
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #fff; }
+body { font-family: "Geist", system-ui, sans-serif; color: var(--ink); font-size: 9.6pt; line-height: 1.5;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; font-feature-settings: "ss01"; }
+.page { width: 210mm; height: 297mm; padding: 15mm 16mm 13mm; position: relative; overflow: hidden;
+  page-break-after: always; break-after: page; display: flex; flex-direction: column; gap: 4.2mm; background: #fff; }
+.page:last-child { page-break-after: auto; }
+.foot { position: absolute; left: 16mm; right: 16mm; bottom: 7mm; display: flex; justify-content: space-between;
+  font-size: 7.5pt; color: var(--note); border-top: 0.6pt solid var(--line); padding-top: 2mm; }
+h1 { font-size: 22pt; line-height: 1.12; letter-spacing: -0.02em; font-weight: 650; }
+h2 { font-size: 16pt; line-height: 1.15; letter-spacing: -0.015em; font-weight: 650; }
+h3 { font-size: 10.6pt; font-weight: 620; margin-bottom: 1mm; }
+p { max-width: 172mm; }
+.lead { font-size: 10.6pt; color: #2b303b; }
+.note { color: var(--note); }
+.small { font-size: 8.3pt; }
+.mono, code { font-family: "Geist Mono", ui-monospace, monospace; font-size: 0.9em; }
+code { background: #EDEFF3; padding: 0.2mm 1mm; border-radius: 1mm; }
+pre { font-family: "Geist Mono", monospace; font-size: 7.6pt; line-height: 1.45; background: #EDEFF3; border-radius: 2mm;
+  padding: 3mm 3.5mm; white-space: pre-wrap; }
+b, strong { font-weight: 620; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+.cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4mm; }
+.cols-62 { display: grid; grid-template-columns: 1.55fr 1fr; gap: 5mm; align-items: start; }
+.panel { background: var(--sheet); border: 0.7pt solid var(--line); border-radius: 3mm; padding: 3.5mm 4mm; }
+.tint { background: var(--wash2); border-color: #cfdaf5; }
+.ok { color: var(--pine); } .warn { color: var(--amber); } .bad { color: var(--brick); } .blue { color: var(--cobalt); }
+.shot { width: 100%; border: 0.7pt solid var(--line); border-radius: 2.5mm; display: block; }
+.cap { font-size: 7.8pt; color: var(--note); margin-top: 1.2mm; }
+table { width: 100%; border-collapse: collapse; font-size: 8.4pt; }
+th { text-align: left; font-weight: 600; color: var(--note); font-size: 7.6pt; padding: 1.4mm 2mm; border-bottom: 0.8pt solid var(--line); }
+td { padding: 1.5mm 2mm; border-bottom: 0.5pt solid #e9ecf1; vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+.num { font-variant-numeric: tabular-nums; }
+.tag { display: inline-block; font-size: 7.2pt; font-weight: 600; padding: 0.3mm 1.8mm; border-radius: 9mm; background: var(--wash); color: var(--cobalt-ink); }
+.tag.ok { background: var(--pine-soft); color: var(--pine); }
+.tag.warn { background: var(--amber-soft); color: var(--amber); }
+.tag.bad { background: var(--brick-soft); color: var(--brick); }
+.tag.grey { background: #EDEFF3; color: var(--note); }
+ul.plain { list-style: none; display: flex; flex-direction: column; gap: 1.6mm; }
+ul.dots { padding-left: 4mm; display: flex; flex-direction: column; gap: 1.2mm; }
+.kbd { font-family: "Geist Mono"; font-size: 8pt; }
+
+/* flow diagrams */
+.flow { display: flex; align-items: stretch; gap: 0; }
+.node { flex: 1; background: var(--sheet); border: 0.8pt solid var(--line); border-radius: 2.5mm; padding: 2.4mm 2.6mm; }
+.node h4 { font-size: 8.8pt; font-weight: 620; margin-bottom: 0.6mm; }
+.node p { font-size: 7.6pt; color: var(--note); line-height: 1.4; }
+.node.hl { background: var(--wash2); border-color: #b9c9f0; }
+.arrow { width: 6mm; display: flex; align-items: center; justify-content: center; color: var(--slate); }
+.arrow svg { width: 5mm; height: 5mm; }
+.vflow { display: flex; flex-direction: column; align-items: stretch; }
+.down { height: 5mm; display: flex; justify-content: center; color: var(--slate); }
+.down svg { width: 5mm; height: 5mm; }
+
+/* cover */
+.cover { padding: 0; }
+.cover-top { background: #12151B; color: #E6E9EF; padding: 18mm 16mm 12mm; display: flex; flex-direction: column; gap: 5mm; }
+.cover-top h1 { font-size: 30pt; color: #fff; max-width: 160mm; }
+.cover-top .lead { color: #b9c0cf; font-size: 11.5pt; max-width: 150mm; }
+.brand { display: flex; align-items: center; gap: 3mm; font-weight: 600; font-size: 10pt; color: #fff; }
+.brand img { width: 8mm; height: 8mm; }
+.cover-body { padding: 9mm 16mm 0; display: flex; flex-direction: column; gap: 6mm; }
+.steps { counter-reset: s; display: grid; grid-template-columns: repeat(5, 1fr); gap: 3mm; }
+.steps div { border-top: 1.6pt solid var(--cobalt); padding-top: 2mm; font-size: 8.2pt; }
+.steps b { display: block; font-size: 9pt; margin-bottom: 0.6mm; }
+
+.layer { display: grid; grid-template-columns: 11mm 34mm 1fr 25mm; gap: 2.5mm; align-items: baseline; padding: 1.7mm 0; border-bottom: 0.5pt solid #e9ecf1; font-size: 8.4pt; }
+.layer:last-child { border-bottom: 0; }
+.layer .id { font-weight: 650; color: var(--cobalt); font-variant-numeric: tabular-nums; }
+.layer .what { color: #2b303b; }
+.big { font-size: 20pt; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.bar { height: 2.4mm; border-radius: 2mm; background: var(--cobalt); }
+.bar.grey { background: var(--slate); }
+.bar.pine { background: var(--pine); }
+.bar.amber { background: #C88A20; }
+.timeline { display: grid; grid-template-columns: 38mm 1fr 15mm; gap: 1.2mm 3mm; align-items: center; font-size: 8.1pt; }
+
+ul[style*='columns'] li { break-inside: avoid; margin-bottom: 1.4mm; }
