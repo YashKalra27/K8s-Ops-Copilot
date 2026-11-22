@@ -84,7 +84,7 @@ def test_rejected_sql_is_never_executed(fake_services):
 
 
 def test_hybrid_route_waits_for_approval_before_sql(fake_services):
-    """Regression: the original hybrid path executed SQL inline before approval."""
+    """The hybrid path must never execute SQL before approval."""
     fake_sql, state = fake_services
     state["intent"] = "hybrid"
     g = graph_module.build_graph(checkpointer=MemorySaver())
@@ -240,7 +240,7 @@ def test_sql_flow_and_ownership_over_http(client):
     layers = [s["layer"] for s in body["metadata"]["trace"]]
     assert layers[:4] == ["L1", "L4a", "L4b", "L6"]
 
-    # Another user cannot approve alice's query (regression: original had no check).
+    # Another user cannot approve alice's query.
     other = client.post(
         "/query/sql/execute", json={"query_id": pending["query_id"], "approved": True}, headers=_auth("mallory")
     )

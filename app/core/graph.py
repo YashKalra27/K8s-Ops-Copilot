@@ -52,8 +52,7 @@ def route_intent(state: GraphState) -> dict:
 
 def retrieve_rag(state: GraphState) -> dict:
     """Hybrid route, documents leg. Only retrieves: the SQL leg must still wait
-    for human approval. (The original called run_rag here, which executed the
-    SQL inline *before* approval and passed file names instead of chunk text.)"""
+    for human approval, so no SQL ever runs inside this node."""
     chunks, evaluation, used_web = retrieve(state["question"], flags=state.get("flags", {}))
     return {
         "retrieved_chunks": chunks,

@@ -156,7 +156,7 @@ export function FinalCta({ onOpen }: { onOpen: () => void }) {
         </div>
       </div>
       <footer className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-3 border-t border-border/60 px-5 py-6 text-sm text-muted-foreground md:px-8">
-        <span>K8s Ops Copilot, built on the EnterpriseRAG project</span>
+        <span>K8s Ops Copilot (SRE-Copilot), a B.Tech project at Delhi Technological University</span>
         <span>FastAPI, LangGraph, Qdrant, Postgres, Redis, Ollama</span>
       </footer>
     </section>

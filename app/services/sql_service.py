@@ -11,9 +11,8 @@ from app.config import settings
 from app.services.llm_service import generate
 from app.services.query_cache_service import query_cache
 
-# Only the operational tables are visible to (and queryable by) the LLM. The
-# original code introspected *every* public table, which exposed `users`
-# (password hashes) to Text2SQL.
+# Only the operational tables are visible to (and queryable by) the LLM, so
+# `users` (password hashes) is never exposed to Text2SQL.
 ALLOWED_TABLES = (
     "clusters",
     "nodes",

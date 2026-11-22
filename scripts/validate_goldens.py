@@ -1,6 +1,5 @@
 """Check eval/seed_questions.yaml: schema, unique ids, and that every cited
-document actually exists in the corpus (the original goldens cited 7 files that
-were never shipped)."""
+document actually exists in the corpus."""
 
 from __future__ import annotations
 

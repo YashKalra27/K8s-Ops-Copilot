@@ -15,9 +15,9 @@ from app.models import RetrievedChunk
 _client: QdrantClient | None = None
 _client_lock = threading.Lock()
 
-# The BM25 index mirrors the whole collection. Rebuilding it per query (as the
-# original code did) means scrolling every point on every request, so it is
-# cached and invalidated whenever new chunks are upserted.
+# The BM25 index mirrors the whole collection. Rebuilding it per query would
+# mean scrolling every point on every request, so it is cached and invalidated
+# whenever new chunks are upserted.
 _sparse_index: Any | None = None
 _sparse_lock = threading.Lock()
 

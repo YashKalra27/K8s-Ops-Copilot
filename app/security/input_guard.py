@@ -4,8 +4,7 @@ topics before any LLM sees it.
 Backends:
 - ``llm_guard``: ML scanners from the llm-guard package (most accurate, heavy).
 - ``heuristic``: fast built-in rules. Used when llm-guard isn't installed, or by
-  choice on small machines. The original code allowed *everything* in that case,
-  which silently disabled this layer.
+  choice on small machines, so this layer never switches itself off.
 """
 
 from __future__ import annotations

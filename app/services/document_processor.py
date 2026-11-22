@@ -5,8 +5,7 @@ Two parsers:
   Heavy (downloads layout models on first use) but best on complex PDFs.
 - simple: pypdf / python-docx / HTML-to-text + paragraph chunking. Light and fast.
 
-Docling has no plain-text reader, so .txt always uses the simple path (the
-original code sent .txt files to docling, where every one of them failed).
+Docling has no plain-text reader, so .txt always uses the simple path.
 """
 
 from __future__ import annotations
@@ -128,8 +127,8 @@ class DocumentProcessor:
             from docling.document_converter import DocumentConverter, PdfFormatOption
 
             pipeline_options = PdfPipelineOptions()
-            # AUTO picks CUDA / Apple MPS / CPU. The original hard-coded MPS,
-            # which fails on Linux and inside Docker.
+            # AUTO picks CUDA / Apple MPS / CPU, so the same code runs on Linux
+            # and inside Docker as well as on a Mac.
             pipeline_options.accelerator_options = AcceleratorOptions(
                 num_threads=4, device=AcceleratorDevice.AUTO
             )

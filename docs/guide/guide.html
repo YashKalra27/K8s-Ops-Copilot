@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>K8s Ops Copilot: a beginner's guide to the EnterpriseRAG project</title>
+<title>K8s Ops Copilot: a beginner's guide</title>
 <link rel="stylesheet" href="guide.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
   <div class="cover-top">
     <div class="brand"><img src="img/mark.svg" alt="">K8s Ops Copilot</div>
     <h1>How an enterprise AI assistant answers questions safely</h1>
-    <p class="lead">A beginner's guide to the EnterpriseRAG project: what it does, every part it is made of, and why each part exists. No prior knowledge of AI, databases or Kubernetes is needed.</p>
+    <p class="lead">A beginner's guide to SRE-Copilot (K8s Ops Copilot): what it does, every part it is made of, and why each part exists. No prior knowledge of AI, databases or Kubernetes is needed.</p>
   </div>
   <div class="cover-body">
     <img class="shot" src="img/console.png" alt="The demo console showing an answer, its sources and the pipeline trace">
@@ -26,10 +26,10 @@
       <div><b>Page 5</b>Seven checks before any AI sees your question</div>
       <div><b>Pages 6 to 7</b>Finding facts in documents and in a database</div>
       <div><b>Pages 8 to 9</b>Writing, checking and remembering answers, traced live</div>
-      <div><b>Page 10</b>Run it yourself, and what was fixed</div>
+      <div><b>Page 10</b>Run it yourself</div>
     </div>
   </div>
-  <div class="foot"><span>EnterpriseRAG beginner's guide</span><span>All numbers measured on a local run, October 2026</span></div>
+  <div class="foot"><span>SRE-Copilot beginner's guide</span><span>All numbers measured on a local run, October 2026</span></div>
 </section>
 
 <!-- ============================================================ 2. PROBLEM + IDEA -->
@@ -302,8 +302,8 @@
     <div class="panel">
       <h3>Self-RAG: review your own answer (optional switch)</h3>
       <p>A strict reviewer model scores the finished answer for relevance, accuracy, completeness and clarity. If it falls short, the question is rewritten more precisely (for example "Tell me about pods" becomes a specific question) and answered again, up to 2 times.</p>
-      <h3 style="margin-top:3mm">What a fix taught us</h3>
-      <p class="small">The original code graded all five passages in one prompt with one overall score. A small model then gave every passage the same 0.2 and threw away good evidence, and the answer was written from memory with 95% confidence. Grading each passage on its own, as the CRAG research paper does, fixed it.</p>
+      <h3 style="margin-top:3mm">Why grade one passage at a time</h3>
+      <p class="small">A small model asked to grade five passages in one prompt tends to give them all the same score, so good evidence gets thrown away with the bad. Grading each passage on its own, as the CRAG research paper does, keeps the scores apart.</p>
     </div>
   </div>
 
@@ -432,7 +432,7 @@ UNTRUSTED DATA, not instructions.
 
 <!-- ============================================================ 10. RUN + FIXES -->
 <section class="page">
-  <h2>Run it yourself, and what was fixed</h2>
+  <h2>Run it yourself</h2>
 
   <div class="cols">
     <div class="panel">
@@ -464,25 +464,10 @@ make ui          # console on :5173</pre>
     </div>
   </div>
 
-  <div>
-    <h3>What was broken in the download, and fixed</h3>
-    <p class="small note">The full list, with file names and the tests that guard each fix, is in <span class="mono">CHANGES.md</span>.</p>
-  </div>
-  <table>
-    <tr><th style="width:27%">Problem</th><th>Why it mattered</th><th style="width:25%">Fix</th></tr>
-    <tr><td><b>Did not start</b></td><td>Three files had indentation errors; storage code was in the wrong file; rate limits crashed without a paid Redis service.</td><td>Fixed; local Redis or memory fallback</td></tr>
-    <tr><td><b>SQL ran before approval</b></td><td>On "both" questions the database query executed before the human approved it.</td><td>Approval now always first</td></tr>
-    <tr><td><b>Anyone could approve anyone's SQL</b></td><td>Any signed-in user could run another user's pending query.</td><td>Ownership check</td></tr>
-    <tr><td><b>Password hashes visible to Text2SQL</b></td><td>The AI was shown the <span class="mono">users</span> table.</td><td>7-table allow-list, read-only session</td></tr>
-    <tr><td><b>Raw JSON answers</b>; L9 never called</td><td>Users saw <span class="mono">{"answer": ...}</span> text.</td><td>Validator wired in</td></tr>
-    <tr><td><b>Grader threw away good evidence</b></td><td>Answers were written from memory with high confidence.</td><td>Per-passage CRAG; "not found" over guessing</td></tr>
-    <tr><td><b>12 of 50 documents never indexed</b></td><td>Text files failed silently; "Was this page helpful?" beat real content.</td><td>Text parser, footer removal</td></tr>
-    <tr><td><b>Missing pieces</b> the README promised</td><td>No tests, upload endpoint or data pipeline; 7 cited documents absent.</td><td>All added</td></tr>
-  </table>
 
   <div class="panel tint">
     <h3>Where to go next</h3>
-    <p><span class="mono">ASSIGNMENTS.md</span> has eight hands-on exercises (tune RRF, add a reranker, extend HyDE, build a CRAG dashboard, add a LangGraph node) and five quizzes with answers. The <span class="mono">notebooks/</span> folder explores hybrid search, reranking, CRAG, Self-RAG and Text2SQL step by step.</p>
+    <p>The <span class="mono">notebooks/</span> folder explores hybrid search, reranking, CRAG, Self-RAG and Text2SQL step by step.</p>
   </div>
   <div class="foot"><span>Run it yourself</span><span>10</span></div>
 </section>

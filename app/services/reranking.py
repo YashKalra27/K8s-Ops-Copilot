@@ -16,8 +16,8 @@ class Reranker:
         self._voyage_client: object | None = None
 
     def _load_local_model(self) -> object:
-        # Loading a cross-encoder takes seconds; the original code reloaded it on
-        # every request because a new Reranker is created per query.
+        # Loading a cross-encoder takes seconds and a new Reranker is created per
+        # query, so the model is loaded once and shared across requests.
         global _SHARED_CROSS_ENCODER
         if _SHARED_CROSS_ENCODER is None:
             from sentence_transformers import CrossEncoder
