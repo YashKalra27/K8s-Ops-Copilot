@@ -8,6 +8,7 @@ openai_client = OpenAI(
     api_key=settings.openai_api_key or "not-needed-for-local-endpoints",
     base_url=settings.openai_base_url or None,
     timeout=settings.llm_timeout_seconds,
+    max_retries=settings.llm_max_retries,
 )
 
 

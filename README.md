@@ -225,6 +225,36 @@ make api
 | `agent@demo.local` | `agent123` | ask questions, approve their own SQL |
 | `admin@demo.local` | `admin123` | also upload documents, view and clear caches |
 
+These are the local defaults. The hosted copy seeds its own passwords from
+`DEMO_AGENT_PASSWORD` and `DEMO_ADMIN_PASSWORD`.
+
+### Hosted deployment (free tiers)
+
+| Part | Runs on |
+|---|---|
+| API and console, one HTTPS URL | [Modal](https://modal.com), image from [`deploy/Dockerfile`](deploy/Dockerfile) with the models baked in |
+| LLM | Gemini 3.5 Flash-Lite through its OpenAI-compatible endpoint |
+| Embeddings | nomic-embed-text-v1.5 in-process via fastembed (`EMBEDDING_BACKEND=fastembed`) |
+| Vector store | embedded Qdrant on the Modal volume `sre-copilot-data` |
+| Postgres | [Neon](https://neon.com) (direct, non-pooled connection, for the LangGraph checkpointer) |
+
+```bash
+# 1. Database: tables, demo data and demo users
+DATABASE_URL=<neon-direct-url> DEMO_AGENT_PASSWORD=... DEMO_ADMIN_PASSWORD=... \
+  uv run python scripts/seed_db.py --no-ingest
+# 2. Vector store: re-embed the local collection with fastembed, then upload it
+EMBEDDING_BACKEND=fastembed EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5 \
+  uv run python scripts/reembed_collection.py --src-path .localdev/qdrant \
+  --src k8s_docs_nomic_v2 --dst-path deploy/qdrant --dst k8s_docs
+modal volume put sre-copilot-data deploy/qdrant /qdrant
+# 3. Config and keys go in the Modal secret "sre-copilot-env", then:
+modal deploy deploy/modal_app.py
+```
+
+[`deploy/modal_app.py`](deploy/modal_app.py) runs one container (embedded Qdrant
+allows one process). Two scheduled jobs keep it warm from 08:00 to midnight IST and
+let it scale to zero overnight, which keeps it inside Modal's free monthly credits.
+
 ---
 
 ## Demo console (`frontend/`)

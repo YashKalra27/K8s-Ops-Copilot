@@ -59,7 +59,8 @@ def _ping_llm() -> tuple[bool, str]:
     try:
         from app.services.llm_service import openai_client
 
-        models = {m.id for m in openai_client.models.list()}
+        # Gemini's OpenAI-compatible API lists ids as "models/<name>".
+        models = {m.id.removeprefix("models/") for m in openai_client.models.list()}
         needed = {settings.llm_model_answer, settings.llm_model_grader}
         if settings.embedding_backend != "fastembed":  # fastembed runs in-process
             needed.add(settings.embedding_model)

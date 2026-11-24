@@ -10,14 +10,30 @@ _local_lock = threading.Lock()
 
 
 def _local_embed(texts: list[str], model: str) -> list[list[float]]:
-    """In-process ONNX embeddings (EMBEDDING_BACKEND=fastembed)."""
+    """In-process ONNX embeddings (EMBEDDING_BACKEND=fastembed).
+
+    A batch is padded to its longest text and attention memory grows with the
+    square of that length, so texts are embedded shortest-first in batches that
+    shrink as the texts get longer (one long chunk in a batch of 64 can need ~10 GB).
+    """
     global _local_model
     with _local_lock:
         if _local_model is None:
             from fastembed import TextEmbedding
 
             _local_model = TextEmbedding(model_name=model)
-        return [v.tolist() for v in _local_model.embed(texts)]
+        order = sorted(range(len(texts)), key=lambda i: len(texts[i]))
+        out: list[list[float]] = [[] for _ in texts]
+        start = 0
+        while start < len(order):
+            longest = len(texts[order[min(start + 31, len(order) - 1)]])  # characters
+            size = 32 if longest <= 2_000 else 8 if longest <= 5_000 else 2
+            batch = order[start : start + size]
+            vectors = _local_model.embed([texts[i] for i in batch], batch_size=size)
+            for i, vector in zip(batch, vectors, strict=True):
+                out[i] = vector.tolist()
+            start += size
+        return out
 
 
 def _embed_batch(texts: list[str], model: str) -> list[list[float]]:

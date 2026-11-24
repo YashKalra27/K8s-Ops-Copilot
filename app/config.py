@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     embedding_query_prefix: str = ""
     embedding_document_prefix: str = ""
     llm_timeout_seconds: float = 120.0
+    # Retries with back-off on 429/5xx; free hosted tiers rate-limit by the minute.
+    llm_max_retries: int = 2
 
     # Qdrant: server mode (QDRANT_URL) or embedded on-disk mode (QDRANT_PATH),
     # which needs no Docker. QDRANT_PATH wins when both are set.
