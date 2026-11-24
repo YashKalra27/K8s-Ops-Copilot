@@ -1,8 +1,30 @@
+import threading
+
 from app.config import settings
 from app.services.llm_service import openai_client
 from app.services.query_cache_service import query_cache
 
 _BATCH_SIZE = 64
+_local_model = None
+_local_lock = threading.Lock()
+
+
+def _local_embed(texts: list[str], model: str) -> list[list[float]]:
+    """In-process ONNX embeddings (EMBEDDING_BACKEND=fastembed)."""
+    global _local_model
+    with _local_lock:
+        if _local_model is None:
+            from fastembed import TextEmbedding
+
+            _local_model = TextEmbedding(model_name=model)
+        return [v.tolist() for v in _local_model.embed(texts)]
+
+
+def _embed_batch(texts: list[str], model: str) -> list[list[float]]:
+    if settings.embedding_backend == "fastembed":
+        return _local_embed(texts, model)
+    response = openai_client.embeddings.create(input=texts, model=model)
+    return [item.embedding for item in response.data]
 
 
 def embed_texts(
@@ -33,10 +55,8 @@ def embed_texts(
     # Batch the misses so a large document doesn't hit request-size limits.
     for start in range(0, len(miss_texts), _BATCH_SIZE):
         batch = miss_texts[start : start + _BATCH_SIZE]
-        response = openai_client.embeddings.create(input=batch, model=model)
-        for offset, item in enumerate(response.data):
+        for offset, vector in enumerate(_embed_batch(batch, model)):
             original_idx = miss_indices[start + offset]
-            vector = item.embedding
             results[original_idx] = vector
             query_cache.set_embedding(batch[offset], vector)
 

@@ -23,6 +23,10 @@ def _warmup() -> None:
     warm_guard()
     Reranker()._load_local_model()
     sparse_search("warmup", top_k=1)
+    if settings.embedding_backend == "fastembed":
+        from app.services.embedding_service import _local_embed
+
+        _local_embed(["warmup"], settings.embedding_model)
     logger.info("Warm-up complete")
 
 

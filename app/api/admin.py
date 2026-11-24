@@ -60,7 +60,9 @@ def _ping_llm() -> tuple[bool, str]:
         from app.services.llm_service import openai_client
 
         models = {m.id for m in openai_client.models.list()}
-        needed = {settings.llm_model_answer, settings.llm_model_grader, settings.embedding_model}
+        needed = {settings.llm_model_answer, settings.llm_model_grader}
+        if settings.embedding_backend != "fastembed":  # fastembed runs in-process
+            needed.add(settings.embedding_model)
         missing = sorted(m for m in needed if m not in models and f"{m}:latest" not in models)
         endpoint = settings.openai_base_url or "api.openai.com"
         if missing:

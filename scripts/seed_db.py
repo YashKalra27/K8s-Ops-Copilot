@@ -14,9 +14,10 @@ DATABASE_URL = os.getenv("DATABASE_URL", settings.database_url)
 MIGRATIONS_DIR = os.path.join(os.path.dirname(__file__), "..", "seed", "migrations")
 DOCS_DIR = os.path.join(os.path.dirname(__file__), "..", "seed", "docs")
 
+# Local demo passwords; a public deployment sets its own through these env vars.
 DEMO_USERS = [
-    ("agent@demo.local", "agent123", False),
-    ("admin@demo.local", "admin123", True),
+    ("agent@demo.local", os.environ.get("DEMO_AGENT_PASSWORD", "agent123"), False),
+    ("admin@demo.local", os.environ.get("DEMO_ADMIN_PASSWORD", "admin123"), True),
 ]
 
 SUPPORTED_EXTENSIONS = {".pdf", ".docx", ".html", ".htm", ".txt", ".md"}

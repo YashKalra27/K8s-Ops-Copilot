@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     llm_model_grader: str = "gpt-4o-mini"
     embedding_model: str = "text-embedding-3-small"
     embedding_dim: int = 1536
+    # "api" calls the endpoint above; "fastembed" runs the model in-process on CPU
+    # (ONNX), e.g. EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5, so a hosted
+    # chat API that has no embeddings endpoint can still be used.
+    embedding_backend: str = "api"  # api | fastembed
     # Some embedding models are trained with task prefixes and retrieve much
     # worse without them (nomic-embed-text: "search_query: " / "search_document: ").
     embedding_query_prefix: str = ""

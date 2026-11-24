@@ -48,6 +48,7 @@ dependencies = [
     "psycopg[binary]>=3.2",
     "psycopg-pool>=3.2",
     "python-docx>=1.1",
+    "fastembed>=0.6",  # in-process ONNX embeddings (EMBEDDING_BACKEND=fastembed)
 ]
 
 [project.optional-dependencies]

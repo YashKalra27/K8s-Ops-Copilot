@@ -85,3 +85,6 @@ frontend/dist/
 # Presentation build tooling
 docs/presentation/node_modules/
 docs/presentation/build/
+
+# Deploy bundle (re-embedded vector store, built from .localdev)
+deploy/qdrant/
