@@ -252,8 +252,8 @@ modal deploy deploy/modal_app.py
 ```
 
 [`deploy/modal_app.py`](deploy/modal_app.py) runs one container (embedded Qdrant
-allows one process). Two scheduled jobs keep it warm from 09:00 to 21:00 IST and
-let it scale to zero otherwise, which keeps it inside Modal's free monthly credits.
+allows one process) that scales to zero when idle, so it only uses Modal's free
+credits while someone is using it. The first visit after a quiet spell takes about 30 s.
 
 ---
 
