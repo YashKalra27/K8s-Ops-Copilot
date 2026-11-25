@@ -214,6 +214,11 @@ def _get_checkpointer() -> PostgresSaver:
         min_size=1,
         max_size=10,
         kwargs={"autocommit": True, "prepare_threshold": 0},
+        # Serverless Postgres (e.g. Neon) closes connections when its compute
+        # suspends after a few idle minutes, so test each connection before
+        # handing it out and retire idle ones before that happens.
+        check=ConnectionPool.check_connection,
+        max_idle=180,
         open=True,
     )
     return PostgresSaver(conn=pool)

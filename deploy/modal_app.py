@@ -29,8 +29,8 @@ data = modal.Volume.from_name("sre-copilot-data", create_if_missing=True)
     image=image,
     secrets=[modal.Secret.from_name("sre-copilot-env")],
     volumes={"/data": data},
-    cpu=(0.25, 2.0),  # (reserved, burst limit): billed on what it actually uses
-    memory=(2048, 6144),
+    cpu=2.0,  # the injection classifier, reranker and embedder need real cores
+    memory=(3072, 6144),  # (reserved, limit) in MiB
     max_containers=1,
     scaledown_window=15 * 60,
     timeout=10 * 60,
@@ -47,7 +47,7 @@ def web():
 
 
 def _set_min_containers(n: int) -> None:
-    modal.Function.from_name(APP_NAME, "web").update_autoscaler(min_containers=n)
+    modal.Function.from_name(APP_NAME, "web").autoscaler.update(min_containers=n)
 
 
 @app.function(schedule=modal.Cron(WARM_FROM, timezone="Asia/Kolkata"))
