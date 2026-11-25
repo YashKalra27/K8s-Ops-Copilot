@@ -253,7 +253,8 @@ modal deploy deploy/modal_app.py
 
 [`deploy/modal_app.py`](deploy/modal_app.py) runs one container (embedded Qdrant
 allows one process) that scales to zero when idle, so it only uses Modal's free
-credits while someone is using it. The first visit after a quiet spell takes about 30 s.
+credits while someone is using it. Memory snapshots keep the models loaded across
+cold starts, so the first visit after a quiet spell answers in about 5 s instead of 25 s.
 
 ---
 
