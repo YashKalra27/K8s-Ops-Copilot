@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SRE-Copilot: End-Semester Presentation</title>
+<style>
+  @font-face { font-family: "Geist"; src: url("assets/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("assets/geist-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @page { size: 1920px 1080px; margin: 0; }
+  :root {
+    --bg: #0A0E17; --bg-2: #0D1220; --card: #111726; --card-2: #151C2E;
+    --fg: #E7EBF3; --muted: #9AA5BC; --dim: #5D6884; --hair: #1F2940; --hair-2: #2A3654;
+    --signal: #7A9CF0; --signal-deep: #2D5BCB; --ice: #C9D6FA; --wash: #1A2440;
+    --ok: #4FC08D; --ok-wash: #12291F; --warn: #E0A642; --warn-wash: #2B2210; --stop: #F07A63; --stop-wash: #2E1712;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: "Geist", system-ui, sans-serif; color: var(--fg); font-feature-settings: "tnum" 1; }
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; }
+
+  .slide { width: 1920px; height: 1080px; position: relative; overflow: hidden; break-after: page; page-break-after: always;
+    background:
+      radial-gradient(900px 620px at var(--gx, 82%) var(--gy, 18%), rgba(45,91,203,.20), transparent 70%),
+      radial-gradient(700px 520px at 8% 100%, rgba(122,156,240,.06), transparent 70%),
+      var(--bg); }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .ic { display: inline-flex; width: 1em; height: 1em; flex: none; }
+  .ic svg { width: 100%; height: 100%; }
+
+  /* ---------------- journey rail */
+  .rail { position: absolute; left: 96px; right: 96px; top: 52px; height: 64px; }
+  .rail .track { position: absolute; left: 0; right: 0; top: 11px; height: 2px; background: var(--hair-2); border-radius: 2px; }
+  .rail .fill { position: absolute; left: 0; top: 11px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(122,156,240,.35), var(--signal)); }
+  .rail .st { position: absolute; top: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .rail .st i { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--hair-2); background: var(--bg); display: block; }
+  .rail .st span { font-size: 17px; color: var(--dim); white-space: nowrap; font-weight: 500; }
+  .rail .st.past i { border-color: rgba(122,156,240,.55); background: rgba(122,156,240,.35); }
+  .rail .st.past span { color: var(--muted); }
+  .rail .st.now i { border-color: var(--signal); background: var(--signal); box-shadow: 0 0 0 7px rgba(122,156,240,.16), 0 0 26px rgba(122,156,240,.65); }
+  .rail .st.now span { color: var(--ice); font-weight: 650; }
+
+  /* ---------------- shared slide chrome */
+  .head { position: absolute; left: 96px; right: 96px; top: 158px; }
+  .head h2 { font-size: 64px; line-height: 1.04; font-weight: 650; letter-spacing: -0.03em; }
+  .head p { margin-top: 14px; font-size: 26px; color: var(--muted); }
+  .body { position: absolute; left: 96px; right: 96px; top: 330px; bottom: 112px; }
+  .presenter { position: absolute; left: 96px; bottom: 44px; display: flex; align-items: center; gap: 14px; font-size: 20px; color: var(--muted); }
+  .presenter b { color: var(--fg); font-weight: 600; }
+  .presenter .av { width: 36px; height: 36px; border-radius: 50%; background: var(--wash); border: 1.5px solid var(--hair-2); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 650; color: var(--ice); }
+  .wordmark { position: absolute; right: 96px; bottom: 46px; display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 600; color: var(--muted); }
+  .wordmark img { width: 30px; height: 30px; }
+
+  .panel { position: absolute; background: linear-gradient(180deg, rgba(21,28,46,.92), rgba(17,23,38,.92)); border: 1.5px solid var(--hair); border-radius: 22px; box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 30px 60px -40px rgba(0,0,0,.8); }
+  .tag { display: inline-flex; align-items: center; gap: 10px; font-size: 21px; font-weight: 600; color: var(--ice); }
+  .tag .ic { font-size: 28px; color: var(--signal); }
+  .pt { display: flex; align-items: flex-start; gap: 14px; font-size: 24px; line-height: 1.3; color: var(--fg); }
+  .pt .ic { font-size: 28px; color: var(--signal); margin-top: 1px; }
+  .muted { color: var(--muted); }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; font-size: 19px; color: var(--ice); background: rgba(45,91,203,.14); border: 1.5px solid rgba(122,156,240,.30); white-space: nowrap; }
+  .q { font-size: 25px; line-height: 1.3; padding: 18px 24px; border-radius: 22px; background: var(--card-2); border: 1.5px solid var(--hair-2); color: var(--fg); }
+  .shot { position: absolute; border-radius: 18px; overflow: hidden; border: 1.5px solid var(--hair-2); box-shadow: 0 34px 70px -34px rgba(0,0,0,.85); background: #F5F6F8; }
+  .shot img { display: block; width: 100%; }
+  .cap { position: absolute; font-size: 18px; color: var(--muted); }
+
+  /* station row (used on several slides) */
+  .chain { position: absolute; display: flex; justify-content: space-between; }
+  .chain::before { content: ""; position: absolute; left: 60px; right: 60px; top: 46px; height: 2px; background: linear-gradient(90deg, var(--hair-2), rgba(122,156,240,.6), var(--hair-2)); }
+  .node { position: relative; width: 200px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .node .orb { width: 94px; height: 94px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 35%, #1C2742, #111726); border: 2px solid rgba(122,156,240,.45); box-shadow: 0 0 0 8px rgba(10,14,23,1), 0 16px 34px -16px rgba(45,91,203,.7); }
+  .node .orb .ic { font-size: 44px; color: var(--signal); }
+  .node b { margin-top: 18px; font-size: 24px; font-weight: 650; letter-spacing: -0.01em; }
+  .node span { margin-top: 6px; font-size: 19px; line-height: 1.3; color: var(--muted); }
+  .node.warn .orb { border-color: var(--warn); border-style: dashed; border-width: 3px; background: radial-gradient(circle at 50% 35%, #33270F, #1E1A12); box-shadow: 0 0 0 8px rgba(10,14,23,1), 0 0 34px -4px rgba(224,166,66,.45); }
+  .node.warn .orb .ic { color: var(--warn); }
+  .node.ok .orb { border-color: var(--ok); background: radial-gradient(circle at 50% 35%, #173526, #102019); box-shadow: 0 0 0 8px rgba(10,14,23,1), 0 0 34px -6px rgba(79,192,141,.45); }
+  .node.ok .orb .ic { color: var(--ok); }
+  .node.opt .orb { border-style: dashed; }
+
+  /* ---------------- cover */
+  .cover { --gx: 74%; --gy: 46%; }
+  .cover .uni { position: absolute; left: 110px; top: 92px; display: flex; align-items: center; gap: 26px; }
+  .cover .seal { width: 112px; height: 112px; border-radius: 50%; background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 4px rgba(201,214,250,.16), 0 16px 40px -10px rgba(0,0,0,.6); }
+  .cover .seal img { width: 106%; }
+  .cover .uni b { display: block; font-size: 31px; font-weight: 650; letter-spacing: -0.01em; }
+  .cover .uni span { display: block; font-size: 22px; color: var(--muted); margin-top: 6px; }
+  .cover .pill { position: absolute; left: 110px; top: 300px; display: inline-flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 600; color: var(--ice); border: 1.5px solid rgba(122,156,240,.45); background: rgba(45,91,203,.16); padding: 9px 22px; border-radius: 999px; }
+  .cover h1 { position: absolute; left: 106px; top: 368px; font-size: 150px; line-height: .95; font-weight: 680; letter-spacing: -0.045em; }
+  .cover .full { position: absolute; left: 110px; top: 540px; width: 940px; font-size: 34px; line-height: 1.3; color: var(--ice); font-weight: 450; }
+  .cover .meta { position: absolute; left: 110px; right: 110px; bottom: 74px; display: grid; grid-template-columns: 180px 1fr 660px; border-top: 1.5px solid var(--hair); padding-top: 30px; }
+  .cover .meta > div + div { padding-left: 40px; border-left: 1.5px solid var(--hair); }
+  .cover .k { font-size: 19px; color: var(--muted); }
+  .cover .v { margin-top: 10px; font-size: 32px; font-weight: 650; }
+  .cover .team { margin-top: 10px; display: flex; gap: 40px; }
+  .cover .team b, .cover .sup b { display: block; font-size: 29px; font-weight: 600; }
+  .cover .team span { display: block; margin-top: 4px; font-size: 21px; color: var(--muted); }
+  .cover .sup { margin-top: 10px; }
+  .cover .sup span { display: block; margin-top: 4px; font-size: 21px; color: var(--muted); line-height: 1.35; }
+  .route { position: absolute; left: 1080px; top: 120px; width: 760px; height: 700px; }
+  .route svg { position: absolute; inset: 0; overflow: visible; }
+  .route .lbl { position: absolute; font-size: 21px; font-weight: 600; color: var(--ice); white-space: nowrap; transform: translateY(-50%); }
+  .route .lbl small { display: block; font-size: 16px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+
+  /* ---------------- slide 1 */
+  .s1 .bub { position: absolute; left: 0; width: 640px; }
+  .s1 .dest { margin-top: 12px; display: flex; align-items: center; gap: 10px; font-size: 20px; color: var(--muted); padding-left: 8px; }
+  .s1 .dest .ic { font-size: 26px; color: var(--signal); }
+  .s1 .tabs { position: absolute; left: 0; top: 432px; display: flex; gap: 14px; }
+  .s1 .tabs-l { position: absolute; left: 0; top: 386px; font-size: 20px; color: var(--muted); }
+  .s1 .tab { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 14px 14px 4px 4px; background: #0F1422; border: 1.5px solid var(--hair-2); font-size: 20px; color: var(--muted); }
+  .s1 .tab .ic { font-size: 24px; color: var(--dim); }
+  .s1 .one { left: 860px; top: 20px; width: 868px; height: 470px; padding: 0 52px; display: flex; flex-direction: column; justify-content: center; }
+  .s1 .one h3 { display: flex; align-items: center; gap: 16px; font-size: 36px; font-weight: 650; letter-spacing: -0.02em; }
+  .s1 .one h3 img { width: 46px; height: 46px; }
+  .s1 .one .pts { margin-top: 34px; display: grid; gap: 26px; }
+  .s1 .one .pt { font-size: 28px; }
+  .s1 .one .pt .ic { font-size: 34px; }
+  .s1 .band { position: absolute; left: 0; right: 0; top: 540px; display: flex; align-items: center; justify-content: space-between; padding-top: 34px; border-top: 1.5px solid var(--hair); }
+  .s1 .band h4 { font-size: 34px; font-weight: 650; letter-spacing: -0.02em; }
+  .s1 .band h4 span { display: block; margin-top: 6px; font-size: 23px; font-weight: 450; color: var(--muted); letter-spacing: 0; }
+  .logos { display: flex; align-items: center; gap: 40px; }
+  .logos img { height: 44px; width: auto; filter: brightness(0) invert(.86); opacity: .9; }
+
+  /* ---------------- slide 2 */
+  .s2 .gates { position: absolute; left: 0; top: 64px; width: 900px; }
+  .s2 .zone-t { position: absolute; left: 0; top: 0; }
+  .s2 .mem { position: absolute; left: 0; top: 352px; width: 900px; }
+  .s2 .memrow { margin-top: 20px; display: grid; grid-template-columns: 1fr 56px 1fr; align-items: center; gap: 10px; }
+  .s2 .memrow .q { font-size: 22px; padding: 16px 20px; }
+  .s2 .memrow .q u { text-decoration: none; color: var(--warn); font-weight: 650; }
+  .s2 .memrow .q.rew { border-color: rgba(122,156,240,.55); background: rgba(45,91,203,.16); }
+  .s2 .memrow .q.rew u { color: var(--signal); }
+  .s2 .memrow .big { font-size: 44px; justify-self: center; }
+  .s2 .router { left: 1010px; top: 190px; width: 250px; height: 170px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .s2 .router .ic { font-size: 54px; color: var(--signal); }
+  .s2 .router b { margin-top: 12px; font-size: 26px; font-weight: 650; }
+  .s2 .router span { font-size: 19px; color: var(--muted); margin-top: 4px; }
+  .s2 .lane { left: 1388px; width: 340px; height: 168px; padding: 22px 24px; }
+  .s2 .lane .top { display: flex; align-items: center; gap: 12px; }
+  .s2 .lane .badge { width: 38px; height: 38px; border-radius: 50%; background: var(--signal-deep); color: #F7F9FE; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 19px; }
+  .s2 .lane .top .ic { font-size: 30px; color: var(--signal); }
+  .s2 .lane .top b { font-size: 25px; font-weight: 650; }
+  .s2 .lane p { margin-top: 12px; font-size: 19px; line-height: 1.3; color: var(--muted); }
+  .s2 .lane p i { font-style: normal; color: var(--ice); }
+
+  /* ---------------- slide 3 */
+  .s3 .field { left: 0; top: 0; width: 720px; height: 620px; padding: 34px 36px; }
+  .s3 .dots { position: relative; width: 648px; height: 430px; margin-top: 24px; }
+  .s3 .dots i { position: absolute; width: 11px; height: 11px; border-radius: 50%; background: #26304A; }
+  .s3 .dots i.sig { background: #3A5590; }
+  .s3 .dots i.hit { background: var(--signal); box-shadow: 0 0 0 5px rgba(122,156,240,.16), 0 0 18px rgba(122,156,240,.9); }
+  .s3 .legend { margin-top: 26px; display: flex; gap: 30px; font-size: 19px; color: var(--muted); }
+  .s3 .legend span { display: inline-flex; align-items: center; gap: 10px; }
+  .s3 .legend em { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .s3 .hyde { left: 800px; top: 0; width: 928px; height: 112px; padding: 0 30px; display: flex; align-items: center; gap: 22px; border-style: dashed; border-color: rgba(224,166,66,.5); }
+  .s3 .hyde .ic { font-size: 40px; color: var(--warn); }
+  .s3 .hyde b { font-size: 25px; font-weight: 650; }
+  .s3 .hyde .flow { display: flex; align-items: center; gap: 14px; margin-left: auto; font-size: 20px; color: var(--muted); }
+  .s3 .hyde .flow i { font-style: normal; color: var(--dim); }
+  .s3 .eng { top: 150px; width: 444px; height: 250px; padding: 28px 30px; }
+  .s3 .eng h4 { display: flex; align-items: center; gap: 14px; font-size: 28px; font-weight: 650; }
+  .s3 .eng h4 .ic { font-size: 38px; color: var(--signal); }
+  .s3 .eng .sub { margin-top: 8px; font-size: 21px; color: var(--muted); }
+  .s3 .eng .ex { margin-top: 26px; display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; font-size: 20px; color: var(--muted); }
+  .s3 .eng .ex .chip { font-size: 18px; padding: 7px 12px; }
+  .s3 .rrf { left: 800px; top: 452px; width: 928px; height: 168px; padding: 26px 30px; display: flex; align-items: center; gap: 26px; }
+  .s3 .rrf .ic { font-size: 46px; color: var(--signal); }
+  .s3 .rrf b { display: block; font-size: 27px; font-weight: 650; }
+  .s3 .rrf span { display: block; margin-top: 6px; font-size: 20px; color: var(--muted); }
+  .s3 .rrf .stack { margin-left: auto; display: grid; grid-template-columns: repeat(10, 22px); gap: 8px; }
+  .s3 .rrf .stack i { width: 22px; height: 28px; border-radius: 5px; background: rgba(122,156,240,.22); border: 1.5px solid rgba(122,156,240,.55); }
+  .s3 .rrf .out { text-align: right; font-size: 20px; color: var(--ice); font-weight: 600; margin-left: 18px; white-space: nowrap; }
+
+  /* ---------------- slide 4 */
+  .s4 .rank { left: 0; top: 0; width: 760px; height: 620px; padding: 34px 38px; }
+  .s4 .tiles { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; margin-top: 36px; }
+  .s4 .tiles i { height: 46px; border-radius: 8px; background: #1A2238; border: 1.5px solid var(--hair-2); }
+  .s4 .ce { margin: 40px auto 0; width: 500px; padding: 20px 24px; border-radius: 18px; background: var(--wash); border: 1.5px solid rgba(122,156,240,.45); display: flex; align-items: center; gap: 18px; }
+  .s4 .ce .ic { font-size: 46px; color: var(--signal); }
+  .s4 .ce b { display: block; font-size: 25px; font-weight: 650; }
+  .s4 .ce span { display: block; font-size: 19px; color: var(--muted); margin-top: 4px; }
+  .s4 .best { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 40px; }
+  .s4 .best i { height: 62px; border-radius: 10px; background: rgba(122,156,240,.25); border: 2px solid var(--signal); box-shadow: 0 0 22px -6px rgba(122,156,240,.7); }
+  .s4 .arrow { display: flex; justify-content: center; margin-top: 18px; color: var(--dim); font-size: 30px; }
+  .s4 .rank .notes { margin-top: 34px; display: flex; gap: 34px; font-size: 20px; color: var(--muted); justify-content: center; }
+  .s4 .crag { left: 840px; top: 0; width: 888px; height: 620px; padding: 34px 38px; }
+  .s4 .rows { margin-top: 20px; display: grid; gap: 8px; }
+  .s4 .row { display: flex; align-items: center; justify-content: space-between; padding: 8px 18px; border-radius: 12px; background: #131A2B; border: 1.5px solid var(--hair); font-size: 21px; color: var(--muted); }
+  .s4 .g { font-family: "Geist Mono", monospace; font-size: 21px; font-weight: 600; padding: 4px 14px; border-radius: 999px; }
+  .g.ok { color: var(--ok); background: var(--ok-wash); }
+  .g.warn { color: var(--warn); background: var(--warn-wash); }
+  .s4 .outs { margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .s4 .out { padding: 14px 18px; border-radius: 16px; border: 1.5px solid; }
+  .s4 .out .ic { font-size: 32px; }
+  .s4 .out b { display: block; margin-top: 8px; font-size: 22px; font-weight: 650; }
+  .s4 .out span { display: block; margin-top: 4px; font-size: 18px; line-height: 1.3; color: var(--muted); }
+  .out.ok { border-color: rgba(79,192,141,.45); background: var(--ok-wash); } .out.ok .ic { color: var(--ok); }
+  .out.warn { border-color: rgba(224,166,66,.45); background: var(--warn-wash); } .out.warn .ic { color: var(--warn); }
+  .out.stop { border-color: rgba(240,122,99,.45); background: var(--stop-wash); } .out.stop .ic { color: var(--stop); }
+
+  /* ---------------- slide 5 */
+  .s5 .lbl-row { position: absolute; left: 0; font-size: 22px; font-weight: 600; color: var(--ice); display: flex; align-items: center; gap: 12px; }
+  .s5 .lbl-row .ic { font-size: 28px; color: var(--signal); }
+  .s5 .sql { position: absolute; left: 0; top: 240px; width: 1030px; padding: 14px 22px; border-radius: 14px; background: #0D1322; border: 1.5px solid var(--hair-2); font-size: 16px; line-height: 1.6; color: #C3CCE0; white-space: pre; }
+  .s5 .sql b { color: var(--signal); font-weight: 600; }
+  .s5 .end { position: absolute; right: 0; top: 646px; display: flex; align-items: center; gap: 12px; font-size: 21px; color: var(--ok); font-weight: 600; }
+
+  /* ---------------- slide 6 */
+  .s6 .matrix { left: 0; top: 0; width: 900px; height: 500px; padding: 34px 40px; }
+  .s6 table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+  .s6 th { font-size: 19px; font-weight: 600; color: var(--muted); padding: 10px 0; text-align: center; }
+  .s6 th:first-child, .s6 td:first-child { text-align: left; width: 210px; }
+  .s6 td { padding: 10px 0; text-align: center; font-size: 21px; border-top: 1.5px solid var(--hair); }
+  .s6 td:first-child { color: var(--fg); font-weight: 500; }
+  .s6 td i { display: inline-block; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--hair-2); }
+  .s6 td i.on { border-color: var(--signal); background: var(--signal); box-shadow: 0 0 14px -2px rgba(122,156,240,.8); }
+  .s6 .plan { left: 980px; top: 0; width: 748px; height: 500px; padding: 36px 40px; }
+  .s6 .steps { margin-top: 22px; display: grid; gap: 20px; }
+  .s6 .metrics { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .s6 .paper { margin-top: 24px; display: flex; align-items: center; gap: 18px; padding: 18px 22px; border-radius: 16px; background: var(--wash); border: 1.5px solid rgba(122,156,240,.45); }
+  .s6 .paper .ic { font-size: 42px; color: var(--signal); }
+  .s6 .paper b { display: block; font-size: 25px; font-weight: 650; }
+  .s6 .paper span { display: block; font-size: 19px; color: var(--muted); margin-top: 4px; }
+  .s6 .thanks { position: absolute; left: 0; right: 0; top: 530px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1.5px solid var(--hair); padding-top: 26px; }
+  .s6 .thanks h3 { font-size: 46px; font-weight: 680; letter-spacing: -0.03em; }
+  .s6 .thanks h3 span { color: var(--muted); font-weight: 500; }
+  .s6 .thanks p { font-size: 21px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ COVER -->
+<section class="slide cover">
+  <div class="uni">
+    <div class="seal"><img src="assets/dtu-logo.png" alt="DTU"></div>
+    <div><b>Delhi Technological University</b><span>Department of Information Technology</span><span>IT401 B.Tech Project-I</span></div>
+  </div>
+  <div class="pill"><i class="ic" data-i="flag-checkered"></i>End-Semester Evaluation</div>
+  <h1>SRE-Copilot</h1>
+  <div class="full">A Production-Grade RAG and Text2SQL System for Kubernetes Operations using Hybrid Retrieval, Self-Correction and LangGraph Orchestration</div>
+
+  <div class="route" id="route">
+    <svg viewBox="0 0 760 700" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2D5BCB" stop-opacity=".35"/><stop offset=".55" stop-color="#7A9CF0"/><stop offset="1" stop-color="#C9D6FA"/></linearGradient>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter>
+      </defs>
+      <path id="routePath" d="M 40 70 C 330 40, 640 80, 640 200 C 640 320, 140 290, 140 410 C 140 530, 560 500, 700 630" fill="none" stroke="url(#rg)" stroke-width="16" stroke-linecap="round" opacity=".28" filter="url(#glow)"/>
+      <use href="#routePath" stroke="url(#rg)" stroke-width="4" fill="none"/>
+      <g id="stations"></g>
+    </svg>
+  </div>
+
+  <div class="meta">
+    <div><div class="k">Group</div><div class="v">163</div></div>
+    <div><div class="k">Team members</div>
+      <div class="team"><div><b>Yash Kalra</b><span class="mono">23/IT/178</span></div><div><b>Aditya Ahlawat</b><span class="mono">23/IT/194</span></div><div><b>Sumay Mittal</b><span class="mono">23/IT/163</span></div></div></div>
+    <div><div class="k">Supervisor</div><div class="sup"><b>Dr. Varsha Sisaudia</b><span>Assistant Professor, Department of Information Technology</span></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ 1. PROBLEM (Yash) -->
+<section class="slide s1" data-at="0" style="--gx: 70%; --gy: 40%">
+  <div class="rail"></div>
+  <div class="head"><h2>Two questions. Three tabs. One tired engineer.</h2><p>What on-call looks like during a Kubernetes incident</p></div>
+  <div class="body">
+    <div class="tag" style="position:absolute;left:0;top:0"><i class="ic" data-i="alarm"></i>Paged in the middle of the night</div>
+    <div class="bub" style="top:62px"><div class="q">“How do I fix ErrImagePull?”</div><div class="dest"><i class="ic" data-i="book-open-text"></i>The answer lives in docs and runbooks</div></div>
+    <div class="bub" style="top:222px"><div class="q">“Which clusters had the most P1 incidents?”</div><div class="dest"><i class="ic" data-i="database"></i>The answer lives in a database</div></div>
+    <div class="tabs-l">Today: three tabs open at once</div><div class="tabs"><div class="tab"><i class="ic" data-i="browsers"></i>Kubernetes docs</div><div class="tab"><i class="ic" data-i="browsers"></i>Team wiki</div><div class="tab"><i class="ic" data-i="browsers"></i>SQL client</div></div>
+
+    <svg style="position:absolute;left:690px;top:200px" width="150" height="100" viewBox="0 0 150 100"><defs><linearGradient id="ag" gradientUnits="userSpaceOnUse" x1="6" y1="0" x2="134" y2="0"><stop offset="0" stop-color="#2A3654"/><stop offset="1" stop-color="#7A9CF0"/></linearGradient></defs><path d="M6 50 H128" stroke="url(#ag)" stroke-width="4" stroke-linecap="round"/><path d="M114 34 L134 50 L114 66" fill="none" stroke="#7A9CF0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+    <div class="panel one">
+      <h3><img src="assets/mark.svg" alt="">SRE-Copilot: one chat box for both</h3>
+      <div class="pts">
+        <div class="pt"><i class="ic" data-i="seal-check"></i><span>Answers from evidence, with sources</span></div>
+        <div class="pt"><i class="ic" data-i="hand-pointing"></i><span>Asks a human before touching data</span></div>
+        <div class="pt"><i class="ic" data-i="stack"></i><span>Shows every step it took</span></div>
+        <div class="pt"><i class="ic" data-i="shield-warning"></i><span>Can’t be tricked by hidden instructions</span></div>
+      </div>
+    </div>
+
+    <div class="band">
+      <h4>Not a new algorithm. A new pipeline.<span>Proven RAG techniques, assembled, ordered and made safe</span></h4>
+      <div class="logos">
+        <img src="assets/logos/kubernetes.svg" alt="Kubernetes"><img src="assets/logos/python.svg" alt="Python"><img src="assets/logos/fastapi.svg" alt="FastAPI"><img src="assets/logos/langchain.svg" alt="LangGraph"><img src="assets/logos/qdrant.svg" alt="Qdrant"><img src="assets/logos/postgresql.svg" alt="PostgreSQL"><img src="assets/logos/redis.svg" alt="Redis"><img src="assets/logos/ollama.svg" alt="Ollama"><img src="assets/logos/react.svg" alt="React">
+      </div>
+    </div>
+  </div>
+  <div class="presenter"><span class="av">YK</span><b>Yash Kalra</b></div>
+  <div class="wordmark"><img src="assets/mark.svg" alt="">SRE-Copilot</div>
+</section>
+
+<!-- ============================================================ 2. SECURITY + ROUTER (Yash) -->
+<section class="slide s2" data-at="1,2" style="--gx: 76%; --gy: 52%">
+  <div class="rail"></div>
+  <div class="head"><h2>Airport security, then a traffic cop</h2><p>Before any AI runs, every question is checked and routed</p></div>
+  <div class="body">
+    <div class="tag zone-t"><i class="ic" data-i="shield-warning"></i>Fast security checks</div>
+    <div class="chain gates">
+      <div class="node"><div class="orb"><i class="ic" data-i="identification-badge"></i></div><b>Login pass</b><span>JWT, a signed digital pass</span></div>
+      <div class="node"><div class="orb"><i class="ic" data-i="gauge"></i></div><b>Rate limit</b><span>20 questions a minute</span></div>
+      <div class="node"><div class="orb"><i class="ic" data-i="shield-warning"></i></div><b>Attack scan</b><span>Blocks prompt injection</span></div>
+      <div class="node"><div class="orb"><i class="ic" data-i="eye-slash"></i></div><b>Hide personal data</b><span>Emails, API keys</span></div>
+    </div>
+    <div class="mem">
+      <div class="tag"><i class="ic" data-i="chat-teardrop-dots"></i>Memory check: “it” becomes the real problem</div>
+      <div class="memrow">
+        <div class="q">“Does <u>it</u> also happen with private registries?”</div>
+        <span class="ic big" style="color:var(--signal)"><i class="ic" data-i="arrows-clockwise"></i></span>
+        <div class="q rew">“Does <u>ErrImagePull</u> also happen with private registries?”</div>
+      </div>
+      <div class="cap" style="position:static;margin-top:12px">A real follow-up from our console, rewritten before search</div>
+    </div>
+
+    <svg style="position:absolute;left:1260px;top:0" width="128" height="620" viewBox="0 0 128 620">
+      <g fill="none" stroke="#7A9CF0" stroke-width="3" stroke-linecap="round" opacity=".85">
+        <path d="M0 275 C 70 275, 60 84, 124 84"/>
+        <path d="M0 275 H124"/>
+        <path d="M0 275 C 70 275, 60 466, 124 466"/>
+      </g>
+    </svg>
+    <div class="panel router"><i class="ic" data-i="traffic-signal"></i><b>Intent router</b><span>LangGraph workflow</span></div>
+    <div class="panel lane" style="top:0"><div class="top"><span class="badge">A</span><i class="ic" data-i="book-open-text"></i><b>Documents</b></div><p>How-to and troubleshooting<br><i>“How do I debug a CrashLoopBackOff?”</i></p></div>
+    <div class="panel lane" style="top:191px"><div class="top"><span class="badge">B</span><i class="ic" data-i="database"></i><b>Database</b></div><p>Numbers, counts, incident logs<br><i>“Which 5 clusters had the most P1s?”</i></p></div>
+    <div class="panel lane" style="top:382px"><div class="top"><span class="badge">C</span><i class="ic" data-i="git-merge"></i><b>Both</b></div><p>Data plus the fix<br><i>“Slow P1s and our escalation policy?”</i></p></div>
+  </div>
+  <div class="presenter"><span class="av">YK</span><b>Yash Kalra</b></div>
+  <div class="wordmark"><img src="assets/mark.svg" alt="">SRE-Copilot</div>
+</section>
+
+<!-- ============================================================ 3. SEARCH (Aditya) -->
+<section class="slide s3" data-at="3" style="--gx: 30%; --gy: 60%">
+  <div class="rail"></div>
+  <div class="head"><h2>Finding the needle in the haystack</h2><p>Path A: searching the documents</p></div>
+  <div class="body">
+    <div class="panel field">
+      <div class="tag"><i class="ic" data-i="files"></i>About 6,200 paragraph-sized chunks</div>
+      <div class="dots" id="dots"></div>
+      <div class="legend"><span><em style="background:#26304A"></em>Noise, about 79%</span><span><em style="background:#3A5590"></em>Kubernetes docs</span><span><em style="background:#7A9CF0;box-shadow:0 0 10px #7A9CF0"></em>The right pages</span></div>
+    </div>
+
+    <div class="panel hyde"><i class="ic" data-i="lightbulb"></i><b>HyDE <span class="muted" style="font-weight:450">(optional)</span></b>
+      <div class="flow"><span>Vague question</span><i>›</i><span>AI imagines an answer</span><i>›</i><span>Search with it too</span></div></div>
+
+    <div class="panel eng" style="left:800px"><h4><i class="ic" data-i="magnifying-glass"></i>Dense search</h4><div class="sub">Searches by meaning</div>
+      <div class="ex"><span class="chip">pod keeps dying</span><span style="font-size:26px">≈</span><span class="chip">restart back-off</span></div></div>
+    <div class="panel eng" style="left:1284px"><h4><i class="ic" data-i="brackets-angle"></i>BM25</h4><div class="sub">Searches by exact words</div>
+      <div class="ex"><span class="chip mono">ErrImagePull</span><span>matched as one word</span></div></div>
+
+    <svg style="position:absolute;left:800px;top:400px" width="928" height="52" viewBox="0 0 928 52"><g fill="none" stroke="#7A9CF0" stroke-width="3" stroke-linecap="round" opacity=".8"><path d="M222 2 C 222 30, 464 22, 464 50"/><path d="M706 2 C 706 30, 464 22, 464 50"/></g></svg>
+    <div class="panel rrf"><i class="ic" data-i="arrows-merge"></i><div><b>RRF merges both lists</b><span>Ranked high by both engines? It wins.</span></div>
+      <div class="stack" id="stack20"></div><div class="out">Top 20</div></div>
+  </div>
+  <div class="presenter"><span class="av">AA</span><b>Aditya Ahlawat</b></div>
+  <div class="wordmark"><img src="assets/mark.svg" alt="">SRE-Copilot</div>
+</section>
+
+<!-- ============================================================ 4. RANK + GRADE (Aditya) -->
+<section class="slide s4" data-at="4,5" style="--gx: 70%; --gy: 46%">
+  <div class="rail"></div>
+  <div class="head"><h2>Read closely, then fact-check</h2><p>Path A: from 20 candidates to trusted evidence</p></div>
+  <div class="body">
+    <div class="panel rank">
+      <div class="tag"><i class="ic" data-i="ranking"></i>Reranking</div>
+      <div class="tiles" id="tiles20"></div>
+      <div class="ce"><i class="ic" data-i="magnifying-glass"></i><div><b>Cross-encoder</b><span>Reads question and page side by side</span></div></div>
+      <div class="best"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="notes"><span>20 in, best 5 out</span><span>Slower, much sharper</span></div>
+    </div>
+    <div class="panel crag">
+      <div class="tag"><i class="ic" data-i="seal-check"></i>CRAG: the fact-checking editor</div>
+      <div class="rows">
+        <div class="row"><span>Passage 1</span><span class="g ok">0.96</span></div>
+        <div class="row"><span>Passage 2</span><span class="g ok">0.95</span></div>
+        <div class="row"><span>Passage 3</span><span class="g ok">0.95</span></div>
+        <div class="row"><span>Passage 4</span><span class="g warn">0.60</span></div>
+        <div class="row"><span>Passage 5</span><span class="g warn">0.50</span></div>
+      </div>
+      <div class="cap" style="position:static;margin-top:10px">Real grades for “How do I debug a CrashLoopBackOff?”</div>
+      <div class="outs">
+        <div class="out ok"><i class="ic" data-i="check-circle"></i><b>0.7 and above</b><span>Answer from the docs</span></div>
+        <div class="out warn"><i class="ic" data-i="globe"></i><b>0.5 to 0.7</b><span>Add live web results</span></div>
+        <div class="out stop"><i class="ic" data-i="question"></i><b>Below 0.5</b><span>Junk dropped. Web, or “I&nbsp;don’t&nbsp;know”</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="presenter"><span class="av">AA</span><b>Aditya Ahlawat</b></div>
+  <div class="wordmark"><img src="assets/mark.svg" alt="">SRE-Copilot</div>
+</section>
+
+<!-- ============================================================ 5. SQL + ANSWER (Sumay) -->
+<section class="slide s5" data-at="6,7" style="--gx: 84%; --gy: 40%">
+  <div class="rail"></div>
+  <div class="head"><h2>Ask first, then answer</h2><p>Path B, and how every final answer is written</p></div>
+  <div class="body">
+    <div class="lbl-row" style="top:0"><i class="ic" data-i="database"></i>Querying the database safely</div>
+    <div class="chain" style="left:0;top:42px;width:1030px">
+      <div class="node"><div class="orb"><i class="ic" data-i="database"></i></div><b>Text2SQL</b><span>English to SQL</span></div>
+      <div class="node"><div class="orb"><i class="ic" data-i="seal-check"></i></div><b>EXPLAIN</b><span>Dry run, nothing executes</span></div>
+      <div class="node"><div class="orb"><i class="ic" data-i="shield-warning"></i></div><b>Guard</b><span>Read-only, 7 tables</span></div>
+      <div class="node warn"><div class="orb"><i class="ic" data-i="pause-circle"></i></div><b>Pause</b><span>Waits for a human</span></div>
+      <div class="node ok"><div class="orb"><i class="ic" data-i="hand-pointing"></i></div><b>Approve</b><span>Runs read-only, 5 s</span></div>
+    </div>
+    <div class="sql mono"><b>SELECT</b> c.cluster_id, c.name, <b>COUNT</b>(i.incident_id) <b>AS</b> p1_incident_count
+<b>FROM</b> clusters c <b>JOIN</b> incidents i <b>ON</b> i.cluster_id = c.cluster_id
+<b>WHERE</b> i.severity = 'P1' <b>GROUP BY</b> c.cluster_id, c.name <b>ORDER BY</b> p1_incident_count <b>DESC LIMIT</b> 5</div>
+    <div class="shot" style="left:1100px;top:0;width:628px"><img src="assets/crop-approval.png" alt="Approval card"></div>
+    <div class="cap" style="left:1100px;top:296px">Nothing runs until someone clicks Approve</div>
+
+    <div class="lbl-row" style="top:396px"><i class="ic" data-i="pencil-line"></i>Writing and checking the final answer</div>
+    <div class="chain" style="left:0;right:0;top:442px">
+      <div class="node" style="width:250px"><div class="orb"><i class="ic" data-i="brackets-angle"></i></div><b>Spotlighting</b><span>Documents fenced as data, not orders</span></div>
+      <div class="node" style="width:250px"><div class="orb"><i class="ic" data-i="link"></i></div><b>Answer with sources</b><span>Cites the exact pages</span></div>
+      <div class="node opt" style="width:250px"><div class="orb"><i class="ic" data-i="arrows-clockwise"></i></div><b>Self-RAG</b><span>Optional: grades its own draft</span></div>
+      <div class="node" style="width:250px"><div class="orb"><i class="ic" data-i="broom"></i></div><b>Output check</b><span>Scrubs personal data</span></div>
+      <div class="node ok" style="width:250px"><div class="orb"><i class="ic" data-i="paper-plane-tilt"></i></div><b>Delivered</b><span>With a full step-by-step trace</span></div>
+    </div>
+  </div>
+  <div class="presenter"><span class="av">SM</span><b>Sumay Mittal</b></div>
+  <div class="wordmark"><img src="assets/mark.svg" alt="">SRE-Copilot</div>
+</section>
+
+<!-- ============================================================ 6. NEXT (Sumay) -->
+<section class="slide s6" data-at="8" style="--gx: 30%; --gy: 40%">
+  <div class="rail"></div>
+  <div class="head"><h2>Next: which piece matters most?</h2><p>Future scope: a research paper built on ablation testing</p></div>
+  <div class="body">
+    <div class="panel matrix">
+      <div class="tag"><i class="ic" data-i="flask"></i>Ablation: switch one piece at a time</div>
+      <table id="abl">
+        <tr><th>Run</th><th>Hybrid</th><th>Rerank</th><th>HyDE</th><th>CRAG</th><th>Self-RAG</th></tr>
+      </table>
+    </div>
+    <div class="panel plan">
+      <div class="tag"><i class="ic" data-i="article"></i>The research plan</div>
+      <div class="steps">
+        <div class="pt"><i class="ic" data-i="flask"></i><span>Turn each technique on and off</span></div>
+        <div class="pt"><i class="ic" data-i="seal-check"></i><span>Score every run on our 40 golden questions</span></div>
+        <div class="pt"><i class="ic" data-i="ranking"></i><span>Rank what helps most, and what helps least</span></div>
+      </div>
+      <div class="metrics"><span class="chip">Faithfulness</span><span class="chip">Context precision</span><span class="chip">Context recall</span><span class="chip">Answer relevancy</span></div>
+      <div class="paper"><i class="ic" data-i="flag-checkered"></i><div><b>Goal: the best combination</b><span>Backed by measured evaluations</span></div></div>
+    </div>
+    <div class="thanks"><h3>Thank you. <span>Questions?</span></h3><p>Yash Kalra, Aditya Ahlawat and Sumay Mittal</p></div>
+  </div>
+  <div class="presenter"><span class="av">SM</span><b>Sumay Mittal</b></div>
+  <div class="wordmark"><img src="assets/mark.svg" alt="">SRE-Copilot</div>
+</section>
+
+<script>
+  // Journey rail: the same nine stations on every content slide; the stations this slide covers glow.
+  const STOPS = ["The problem", "Security", "Router", "Search", "Rerank", "Grade", "SQL", "Answer", "Next"];
+  document.querySelectorAll(".slide[data-at]").forEach((s) => {
+    const at = s.dataset.at.split(",").map(Number); const last = Math.max(...at);
+    const rail = s.querySelector(".rail");
+    const pos = (i) => (i / (STOPS.length - 1)) * 100;
+    rail.innerHTML = `<div class="track"></div><div class="fill" style="width:${pos(last)}%"></div>` +
+      STOPS.map((t, i) => `<div class="st ${at.includes(i) ? "now" : i < last ? "past" : ""}" style="left:${pos(i)}%"><i></i><span>${t}</span></div>`).join("");
+  });
+
+  // Cover: stations placed along the route path.
+  (() => {
+    const path = document.getElementById("routePath"); const g = document.getElementById("stations"); const box = document.getElementById("route");
+    const names = [["Question", ""], ["Security", "checks"], ["Router", "picks a path"], ["Search", "meaning + words"], ["Rerank", "best 5"], ["Grade", "fact-check"], ["Approve", "human in the loop"], ["Answer", "with sources"]];
+    const L = path.getTotalLength();
+    names.forEach(([n, sub], i) => {
+      const p = path.getPointAtLength((i / (names.length - 1)) * L);
+      const end = i === 0 || i === names.length - 1;
+      g.insertAdjacentHTML("beforeend",
+        `<circle cx="${p.x}" cy="${p.y}" r="${end ? 15 : 11}" fill="${end ? "#7A9CF0" : "#0A0E17"}" stroke="#7A9CF0" stroke-width="3"/>` +
+        (end ? `<circle cx="${p.x}" cy="${p.y}" r="28" fill="#7A9CF0" opacity=".16"/>` : ""));
+      const left = p.x > 560;
+      box.insertAdjacentHTML("beforeend", `<div class="lbl" style="left:${left ? p.x - 26 : p.x + 26}px;top:${p.y}px;${left ? "transform:translate(-100%,-50%);text-align:right" : ""}">${n}${sub ? `<small>${sub}</small>` : ""}</div>`);
+    });
+  })();
+
+  // Slide 3: the haystack. Deterministic pseudo-random so every render is identical.
+  (() => {
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const el = document.getElementById("dots"); const cols = 30, rows = 20; const hits = new Set([127, 288, 301, 415, 466]);
+    let html = "";
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const k = r * cols + c; const cls = hits.has(k) ? "hit" : rnd() < 0.21 ? "sig" : "";
+      html += `<i class="${cls}" style="left:${c * 21.6 + (r % 2) * 5}px;top:${r * 21.5}px"></i>`;
+    }
+    el.innerHTML = html;
+    document.getElementById("stack20").innerHTML = "<i></i>".repeat(20);
+    document.getElementById("tiles20").innerHTML = "<i></i>".repeat(20);
+  })();
+
+  // Slide 6: cumulative ablation profiles (the eval-* targets in the Makefile).
+  (() => {
+    const rowsDef = [["Dense only", 0], ["+ Hybrid", 1], ["+ Rerank", 2], ["+ HyDE", 3], ["+ CRAG", 4], ["Everything on", 5]];
+    document.getElementById("abl").insertAdjacentHTML("beforeend",
+      rowsDef.map(([n, k]) => `<tr><td>${n}</td>${[0, 1, 2, 3, 4].map((j) => `<td><i class="${j < k ? "on" : ""}"></i></td>`).join("")}</tr>`).join(""));
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{ "name": "sre-copilot-endsem-deck", "private": true, "type": "module", "scripts": { "build": "node build.mjs" } }

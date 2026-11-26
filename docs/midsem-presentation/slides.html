@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SRE-Copilot Mid-Semester Evaluation</title>
+<style>
+  @font-face { font-family: "Geist"; src: url("../guide/fonts/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("../guide/fonts/geist-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @page { size: 1920px 1080px; margin: 0; }
+
+  :root {
+    /* Midnight (dark slides) */
+    --night: #0A0E17; --night-2: #111726; --star: #E7EBF3; --star-2: #9AA5BC; --ice: #C9D6FA; --cobalt-d: #7A9CF0; --hair-d: #1F2940;
+    /* Frost (light slides) */
+    --frost: #F5F6F8; --sheet: #FCFCFD; --ink: #171A21; --note: #566072; --hair: #DDE1E8;
+    --cobalt: #2D5BCB; --wash: #E6ECFA; --wash-2: #EEF2FC;
+    --pine: #1C7A57; --pine-soft: #E3F2EA; --amber: #8F5A05; --amber-soft: #FBF1DE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: "Geist", system-ui, sans-serif; font-feature-settings: "tnum" 1; }
+  .slide { position: relative; width: 1920px; height: 1080px; overflow: hidden; break-after: page; }
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; }
+
+  /* ------------------------------------------------------------ shared chrome (light slides) */
+  .light { background: var(--frost); color: var(--ink); }
+  .chrome { position: absolute; left: 96px; right: 96px; top: 48px; display: flex; justify-content: space-between; align-items: center; font-size: 20px; color: var(--note); }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; color: var(--ink); }
+  .brand svg { width: 30px; height: 30px; }
+  .pageno { position: absolute; right: 96px; bottom: 44px; font-size: 20px; color: var(--note); }
+  .foot { position: absolute; left: 96px; bottom: 44px; font-size: 20px; color: var(--note); }
+  .head { position: absolute; left: 96px; right: 96px; top: 118px; }
+  .head h2 { font-size: 64px; line-height: 1.04; font-weight: 650; letter-spacing: -0.025em; }
+  .head p { margin-top: 14px; font-size: 27px; line-height: 1.35; color: var(--note); max-width: 1500px; }
+  .panel { background: var(--sheet); border: 1.5px solid var(--hair); border-radius: 22px; box-shadow: 0 1px 0 rgba(23,26,33,.03), 0 18px 40px -28px rgba(23,26,33,.25); }
+  .label { font-size: 19px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--note); }
+
+  /* station glyphs: the deck's one motif (filled = done, ring = pending) */
+  .st { flex: none; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+  .st.done { background: var(--pine); box-shadow: 0 0 0 6px var(--pine-soft); }
+  .st.done::after { content: ""; width: 12px; height: 7px; border-left: 3.5px solid #fff; border-bottom: 3.5px solid #fff; transform: translateY(-2px) rotate(-45deg); }
+  .st.todo { background: var(--sheet); border: 4px solid var(--amber); box-shadow: 0 0 0 6px var(--amber-soft); }
+
+  /* ------------------------------------------------------------ slide 1: title */
+  .s1 { background: radial-gradient(1100px 760px at 80% 46%, rgba(45,91,203,.32), transparent 70%), radial-gradient(700px 500px at 100% 100%, rgba(122,156,240,.12), transparent 70%), var(--night); color: var(--star); }
+  .threads { position: absolute; inset: 0; width: 1920px; height: 1080px; -webkit-mask-image: linear-gradient(90deg, transparent 57%, #000 75%); mask-image: linear-gradient(90deg, transparent 57%, #000 75%); }
+  .s1 .uni { position: absolute; left: 110px; top: 88px; display: flex; align-items: center; gap: 30px; }
+  .seal { width: 128px; height: 128px; border-radius: 50%; background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 4px rgba(201,214,250,.18), 0 16px 40px -10px rgba(0,0,0,.6); }
+  .seal img { width: 118%; height: 118%; object-fit: cover; }
+  .uni b { display: block; font-size: 33px; font-weight: 650; letter-spacing: -0.01em; }
+  .uni span { display: block; font-size: 24px; color: var(--star-2); margin-top: 6px; }
+  .s1 .titleblock { position: absolute; left: 110px; top: 330px; width: 1110px; }
+  .s1 .eval { display: inline-flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 600; color: var(--ice); border: 1.5px solid rgba(122,156,240,.45); background: rgba(45,91,203,.16); padding: 9px 20px; border-radius: 999px; }
+  .s1 .eval i { width: 10px; height: 10px; border-radius: 50%; background: var(--cobalt-d); box-shadow: 0 0 14px var(--cobalt-d); }
+  .s1 h1 { margin-top: 30px; font-size: 138px; line-height: .98; font-weight: 680; letter-spacing: -0.035em; }
+  .s1 h1 em { font-style: normal; color: var(--cobalt-d); }
+  .s1 .full { margin-top: 26px; font-size: 39px; line-height: 1.28; color: var(--ice); font-weight: 450; letter-spacing: -0.005em; }
+  .s1 .meta { position: absolute; left: 110px; right: 110px; bottom: 76px; display: grid; grid-template-columns: 220px 1fr 400px; gap: 0; border-top: 1.5px solid var(--hair-d); padding-top: 30px; }
+  .s1 .meta > div { padding-right: 40px; }
+  .s1 .meta > div + div { padding-left: 40px; border-left: 1.5px solid var(--hair-d); }
+  .s1 .k { font-size: 18px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--star-2); }
+  .s1 .v { margin-top: 12px; font-size: 30px; font-weight: 600; }
+  .s1 .team { margin-top: 12px; display: flex; gap: 48px; }
+  .s1 .team b { display: block; font-size: 30px; font-weight: 600; }
+  .s1 .team span { display: block; margin-top: 4px; font-size: 22px; color: var(--star-2); }
+
+  /* ------------------------------------------------------------ slide 2: progress */
+  .s2 .wrap { position: absolute; left: 96px; right: 96px; top: 290px; bottom: 124px; display: grid; grid-template-columns: 520px 1fr; gap: 36px; }
+  .s2 .score { padding: 38px 40px; display: flex; flex-direction: column; }
+  .ring { position: relative; width: 300px; height: 300px; margin: 6px auto 0; }
+  .ring svg { width: 300px; height: 300px; transform: rotate(-90deg); }
+  .ring .num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring .num b { font-size: 100px; font-weight: 680; letter-spacing: -0.04em; line-height: 1; }
+  .ring .num b small { font-size: 52px; font-weight: 600; }
+  .ring .num span { margin-top: 6px; font-size: 22px; color: var(--note); }
+  .goals { margin-top: 30px; display: flex; flex-direction: column; gap: 20px; }
+  .goal .row { display: flex; justify-content: space-between; align-items: baseline; font-size: 22px; }
+  .goal .row b { font-weight: 600; }
+  .goal .row span { font-weight: 650; color: var(--cobalt); }
+  .goal .bar { margin-top: 9px; height: 12px; border-radius: 99px; background: var(--wash); overflow: hidden; }
+  .goal .bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #2D5BCB, #5B82E3); }
+  .goal small { display: block; margin-top: 6px; font-size: 18px; color: var(--note); }
+
+  .s2 .right { display: grid; grid-template-rows: 1fr auto; gap: 24px; min-height: 0; }
+  .mods { padding: 30px 34px 26px; }
+  .mods .grid { margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 30px; }
+  .mod { display: flex; gap: 16px; align-items: flex-start; }
+  .mod .st { margin-top: 3px; width: 26px; height: 26px; }
+  .mod .st.done::after { width: 10px; height: 6px; border-width: 3px; }
+  .mod b { display: block; font-size: 23px; font-weight: 600; line-height: 1.2; }
+  .mod span { display: block; margin-top: 4px; font-size: 19px; line-height: 1.3; color: var(--note); }
+  .evidence { display: grid; grid-template-columns: 1fr 470px; gap: 24px; }
+  .lit { padding: 24px 30px; }
+  .chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { font-size: 19px; padding: 7px 15px; border-radius: 999px; background: var(--wash-2); border: 1.5px solid #CFDAF5; color: #1E3F94; }
+  .chip i { font-style: normal; color: var(--note); }
+  .term { background: #0F1422; color: #D7DEEC; border-radius: 22px; padding: 22px 28px; font-size: 20px; line-height: 1.55; box-shadow: 0 18px 40px -26px rgba(10,14,23,.6); }
+  .term .dots { display: flex; gap: 8px; margin-bottom: 12px; }
+  .term .dots i { width: 12px; height: 12px; border-radius: 50%; background: #2A3350; }
+  .term .p { color: #7A9CF0; }
+  .term .ok { color: #4FC08D; font-weight: 600; }
+  .term .dim { color: #8591A8; }
+
+  /* ------------------------------------------------------------ slide 3: tasks left */
+  .s3 .list { position: absolute; left: 96px; right: 96px; top: 276px; display: flex; flex-direction: column; gap: 18px; }
+  .task { display: grid; grid-template-columns: 74px 1fr 360px; align-items: center; gap: 28px; padding: 20px 34px 20px 26px; }
+  .task .n { width: 64px; height: 64px; border-radius: 50%; border: 4px solid var(--amber); background: var(--sheet); box-shadow: 0 0 0 7px var(--amber-soft); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 650; color: var(--amber); }
+  .task h3 { font-size: 30px; font-weight: 650; letter-spacing: -0.01em; }
+  .task p { margin-top: 6px; font-size: 21px; line-height: 1.38; color: var(--note); }
+  .task .out { border-left: 1.5px solid var(--hair); padding-left: 28px; }
+  .task .out .label { font-size: 16px; }
+  .task .out b { display: block; margin-top: 6px; font-size: 21px; font-weight: 600; line-height: 1.3; }
+
+  /* ------------------------------------------------------------ slide 4: timeline */
+  .s4 .track { position: absolute; left: 96px; right: 96px; top: 330px; height: 640px; }
+  .s4 svg.route { position: absolute; left: 0; top: 0; width: 1728px; height: 640px; overflow: visible; }
+  .phase { position: absolute; width: 300px; }
+  .phase .when { font-size: 19px; font-weight: 650; letter-spacing: .05em; text-transform: uppercase; }
+  .phase h4 { margin-top: 8px; font-size: 27px; font-weight: 650; line-height: 1.15; letter-spacing: -0.01em; }
+  .phase p { margin-top: 8px; font-size: 19.5px; line-height: 1.38; color: var(--note); }
+  .phase.done .when { color: var(--pine); }
+  .phase.todo .when { color: var(--amber); }
+  .here { position: absolute; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+  .here b { font-size: 19px; font-weight: 650; color: #fff; background: var(--cobalt); padding: 8px 16px; border-radius: 999px; white-space: nowrap; box-shadow: 0 10px 24px -10px rgba(45,91,203,.8); }
+  .finish { position: absolute; right: 0; text-align: right; }
+  .finish .label { color: var(--cobalt); }
+  .finish b { display: block; margin-top: 6px; font-size: 40px; font-weight: 680; letter-spacing: -0.02em; }
+  .legend { position: absolute; left: 96px; bottom: 44px; display: flex; gap: 34px; font-size: 20px; color: var(--note); align-items: center; }
+  .legend span { display: inline-flex; align-items: center; gap: 12px; }
+  .legend .st { width: 22px; height: 22px; }
+  .legend .st.done::after { width: 8px; height: 5px; border-width: 2.5px; }
+  .legend .st.todo { border-width: 3.5px; }
+
+  /* ------------------------------------------------------------ slide 5: demo */
+  .s5 { background: radial-gradient(900px 700px at 78% 48%, rgba(45,91,203,.28), transparent 70%), var(--night); color: var(--star); }
+  .s5 .chrome { color: var(--star-2); }
+  .s5 .brand { color: var(--star); }
+  .s5 .pageno { color: var(--star-2); }
+  .s5 .left { position: absolute; left: 96px; top: 150px; width: 760px; }
+  .s5 h2 { font-size: 76px; font-weight: 680; letter-spacing: -0.03em; line-height: 1; }
+  .s5 .left > p { margin-top: 18px; font-size: 27px; line-height: 1.35; color: var(--star-2); }
+  .steps { margin-top: 44px; display: flex; flex-direction: column; gap: 0; position: relative; }
+  .steps::before { content: ""; position: absolute; left: 21px; top: 26px; bottom: 26px; width: 3px; background: linear-gradient(#7A9CF0, rgba(122,156,240,.15)); border-radius: 3px; }
+  .step { position: relative; display: grid; grid-template-columns: 44px 1fr; gap: 26px; padding: 14px 0; }
+  .step .dot { width: 44px; height: 44px; border-radius: 50%; background: #16203A; border: 3px solid #7A9CF0; display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 650; color: var(--ice); box-shadow: 0 0 22px rgba(122,156,240,.45); }
+  .step b { display: block; font-size: 28px; font-weight: 600; line-height: 1.2; }
+  .step span { display: block; margin-top: 6px; font-size: 20px; color: var(--star-2); line-height: 1.4; }
+  .step code { font-family: "Geist Mono", monospace; font-size: 18.5px; color: var(--ice); background: rgba(122,156,240,.12); border: 1px solid rgba(122,156,240,.25); padding: 2px 9px; border-radius: 7px; }
+  .shots { position: absolute; right: 96px; top: 150px; width: 940px; height: 760px; }
+  .shot { position: absolute; border-radius: 18px; overflow: hidden; border: 1.5px solid rgba(201,214,250,.22); box-shadow: 0 40px 90px -30px rgba(0,0,0,.85), 0 0 0 10px rgba(122,156,240,.05); background: #fff; }
+  .shot img { display: block; width: 100%; }
+  .shot.a { left: 0; top: 0; width: 860px; }
+  .shot.b { right: 0; top: 330px; width: 600px; }
+  .cap { position: absolute; font-size: 18px; color: var(--star-2); display: flex; align-items: center; gap: 10px; }
+  .cap i { width: 8px; height: 8px; border-radius: 50%; background: #4FC08D; box-shadow: 0 0 10px #4FC08D; }
+  .s5 .thanks { position: absolute; left: 96px; bottom: 78px; right: 96px; display: flex; justify-content: space-between; align-items: flex-end; border-top: 1.5px solid var(--hair-d); padding-top: 26px; }
+  .s5 .thanks b { font-size: 40px; font-weight: 650; letter-spacing: -0.02em; }
+  .s5 .thanks span { font-size: 21px; color: var(--star-2); text-align: right; line-height: 1.45; }
+</style>
+</head>
+<body>
+
+<!-- hexagon mark used in the chrome (same mark as the product) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="mark" viewBox="0 0 32 32">
+      <rect width="32" height="32" rx="8" fill="#2D5BCB"/>
+      <path d="M16 6.5 24.2 11.2v9.6L16 25.5l-8.2-4.7v-9.6z" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/>
+      <circle cx="16" cy="16" r="3" fill="#fff"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- =========================================================== 1. TITLE -->
+<section class="slide s1" data-title="Title">
+  <svg class="threads" id="threads" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
+
+  <div class="uni">
+    <div class="seal"><img src="assets/dtu-logo.png" alt="Delhi Technological University seal"></div>
+    <div>
+      <b>Delhi Technological University</b>
+      <span>Department of Information Technology</span>
+      <span>IT401 B.Tech Project-I</span>
+    </div>
+  </div>
+
+  <div class="titleblock">
+    <span class="eval"><i></i>Mid-Semester Evaluation</span>
+    <h1>SRE-<em>Copilot</em>:</h1>
+    <p class="full">A Production-Grade RAG and Text2SQL System for Kubernetes Operations using Hybrid Retrieval, Self-Correction, and LangGraph Orchestration</p>
+  </div>
+
+  <div class="meta">
+    <div><div class="k">Group No.</div><div class="v">163</div></div>
+    <div>
+      <div class="k">Team members</div>
+      <div class="team">
+        <div><b>Sumay Mittal</b><span class="mono">23/IT/163</span></div>
+        <div><b>Yash Kalra</b><span class="mono">23/IT/178</span></div>
+        <div><b>Aditya Ahlawat</b><span class="mono">23/IT/194</span></div>
+      </div>
+    </div>
+    <div><div class="k">Project supervisor</div><div class="v">Dr. Varsha Sisaudia</div></div>
+  </div>
+</section>
+
+<!-- =========================================================== 2. PROGRESS -->
+<section class="slide light s2" data-title="Progress so far">
+  <div class="chrome">
+    <div class="brand"><svg><use href="#mark"/></svg>SRE-Copilot</div>
+    <div>Mid-semester evaluation, Group 163</div>
+  </div>
+  <div class="head">
+    <h2>Progress so far</h2>
+    <p>Every technique promised in the synopsis is built, wired together and running end to end on a local machine. Measuring its gains is next.</p>
+  </div>
+
+  <div class="wrap">
+    <div class="panel score">
+      <div class="label">Work completed</div>
+      <div class="ring">
+        <svg viewBox="0 0 300 300">
+          <circle cx="150" cy="150" r="128" fill="none" stroke="#E6ECFA" stroke-width="26"/>
+          <circle cx="150" cy="150" r="128" fill="none" stroke="url(#rg)" stroke-width="26" stroke-linecap="round" stroke-dasharray="804.25" stroke-dashoffset="201.06"/>
+          <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B82E3"/><stop offset="1" stop-color="#2D5BCB"/></linearGradient></defs>
+        </svg>
+        <div class="num"><b>75<small>%</small></b><span>of planned work</span></div>
+      </div>
+      <div class="goals">
+        <div class="goal"><div class="row"><b>Goal 1: Working prototype</b><span>90%</span></div><div class="bar"><i style="width:90%"></i></div><small>Corpus still to be scaled to 950 noise documents</small></div>
+        <div class="goal"><div class="row"><b>Goal 2: Retrieval stack + Ragas</b><span>60%</span></div><div class="bar"><i style="width:60%"></i></div><small>All techniques built; evaluation runs pending</small></div>
+        <div class="goal"><div class="row"><b>Goal 3: Safety, cache, deployment</b><span>75%</span></div><div class="bar"><i style="width:75%"></i></div><small>Cloud deployment on AWS ECS pending</small></div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="panel mods">
+        <div class="label">Built and executed</div>
+        <div class="grid">
+          <div class="mod"><i class="st done"></i><div><b>Ingestion pipeline</b><span>Docling, chunking, nomic embeddings, Qdrant: 6,122 chunks</span></div></div>
+          <div class="mod"><i class="st done"></i><div><b>Hybrid search + RRF</b><span>Dense vectors and BM25 keywords fused by rank</span></div></div>
+          <div class="mod"><i class="st done"></i><div><b>Cross-encoder reranking</b><span>20 candidates re-scored, best 5 kept</span></div></div>
+          <div class="mod"><i class="st done"></i><div><b>HyDE</b><span>Hypothetical answer embedded to close the vocabulary gap</span></div></div>
+          <div class="mod"><i class="st done"></i><div><b>CRAG + Self-RAG</b><span>Passage grading and a self-critique retry loop</span></div></div>
+          <div class="mod"><i class="st done"></i><div><b>LangGraph orchestration</b><span>Intent router (RAG, SQL, hybrid) with Postgres checkpoints</span></div></div>
+          <div class="mod"><i class="st done"></i><div><b>Text2SQL, human approval</b><span>Read-only SQL over a 7-table ops database, paused for sign-off</span></div></div>
+          <div class="mod"><i class="st done"></i><div><b>9-layer guardrails</b><span>Auth, rate and token limits, injection scan, PII redaction, spotlighting</span></div></div>
+          <div class="mod"><i class="st done"></i><div><b>Service and interfaces</b><span>FastAPI with live streaming, 5-tier Redis cache, React console, chat memory</span></div></div>
+        </div>
+      </div>
+
+      <div class="evidence">
+        <div class="panel lit">
+          <div class="label">Literature reviewed and implemented</div>
+          <div class="chips">
+            <span class="chip">HyDE <i>Gao et al. 2022</i></span>
+            <span class="chip">RRF <i>Cormack et al. 2009</i></span>
+            <span class="chip">CRAG <i>Yan et al. 2024</i></span>
+            <span class="chip">Self-RAG <i>Asai et al. 2023</i></span>
+            <span class="chip">Spotlighting <i>Hines et al. 2024</i></span>
+          </div>
+        </div>
+        <div class="term mono">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div><span class="p">$</span> pytest tests/unit -q</div>
+          <div><span class="ok">82 passed</span> <span class="dim">in 2.85s</span></div>
+          <div class="dim">47 modules, 4.6k lines of Python</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="pageno mono">02 / 05</div>
+</section>
+
+<!-- =========================================================== 3. TASKS LEFT -->
+<section class="slide light s3" data-title="Tasks left to be done">
+  <div class="chrome">
+    <div class="brand"><svg><use href="#mark"/></svg>SRE-Copilot</div>
+    <div>Mid-semester evaluation, Group 163</div>
+  </div>
+  <div class="head">
+    <h2>Tasks left to be done</h2>
+    <p>The remaining 25% turns a working system into a measured, deployed one, closing every goal stated in the synopsis.</p>
+  </div>
+
+  <div class="list">
+    <div class="panel task"><div class="n">1</div>
+      <div><h3>Ragas evaluation and ablation study</h3><p>Run the seven retrieval profiles, from naive RAG to the full stack, on the golden question set and score each one.</p></div>
+      <div class="out"><div class="label">Deliverable</div><b>Faithfulness, context precision and recall per technique</b></div></div>
+    <div class="panel task"><div class="n">2</div>
+      <div><h3>Scale the adversarial knowledge base</h3><p>Grow from 56 signal and 61 noise documents to the synopsis target: 50 signal against 950 noise.</p></div>
+      <div class="out"><div class="label">Deliverable</div><b>True 95% noise / 5% signal corpus</b></div></div>
+    <div class="panel task"><div class="n">3</div>
+      <div><h3>Live web fallback for CRAG</h3><p>The Tavily search step is coded but skipped without an API key; enable it and test low-evidence questions.</p></div>
+      <div class="out"><div class="label">Deliverable</div><b>Graceful answers when the corpus has no evidence</b></div></div>
+    <div class="panel task"><div class="n">4</div>
+      <div><h3>Containerised cloud deployment</h3><p>Verify the Docker Compose stack, deploy to AWS ECS Fargate with infrastructure as code, and add a CI test pipeline.</p></div>
+      <div class="out"><div class="label">Deliverable</div><b>Public, reproducible deployment</b></div></div>
+    <div class="panel task"><div class="n">5</div>
+      <div><h3>Benchmarks, report and final demo</h3><p>Measure latency, cache hit rate and cost for a local 3B model against a hosted model; write the final report.</p></div>
+      <div class="out"><div class="label">Deliverable</div><b>Final report and end-semester presentation</b></div></div>
+  </div>
+  <div class="pageno mono">03 / 05</div>
+</section>
+
+<!-- =========================================================== 4. TIMELINE -->
+<section class="slide light s4" data-title="Expected timeline of completion">
+  <div class="chrome">
+    <div class="brand"><svg><use href="#mark"/></svg>SRE-Copilot</div>
+    <div>Mid-semester evaluation, Group 163</div>
+  </div>
+  <div class="head">
+    <h2>Expected timeline of completion</h2>
+    <p>Three phases are complete. Four focused sprints after this evaluation finish the project by the end of November.</p>
+  </div>
+
+  <div class="track">
+    <svg class="route" viewBox="0 0 1728 640" aria-hidden="true">
+      <defs>
+        <linearGradient id="doneg" x1="0" x2="1"><stop offset="0" stop-color="#1C7A57"/><stop offset="1" stop-color="#2D5BCB"/></linearGradient>
+      </defs>
+      <!-- rail -->
+      <line x1="12" y1="300" x2="700" y2="300" stroke="url(#doneg)" stroke-width="10" stroke-linecap="round"/>
+      <line x1="700" y1="300" x2="1716" y2="300" stroke="#C9B48F" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round"/>
+      <!-- connectors -->
+      <g stroke="#DDE1E8" stroke-width="2">
+        <line x1="40" y1="282" x2="40" y2="210"/><line x1="280" y1="318" x2="280" y2="400"/><line x1="520" y1="282" x2="520" y2="210"/>
+        <line x1="820" y1="318" x2="820" y2="400"/><line x1="1060" y1="282" x2="1060" y2="210"/><line x1="1300" y1="318" x2="1300" y2="400"/><line x1="1540" y1="282" x2="1540" y2="210"/>
+      </g>
+      <!-- done stations -->
+      <g fill="#1C7A57"><circle cx="40" cy="300" r="20"/><circle cx="280" cy="300" r="20"/><circle cx="520" cy="300" r="20"/></g>
+      <g fill="none" stroke="#E3F2EA" stroke-width="10"><circle cx="40" cy="300" r="25"/><circle cx="280" cy="300" r="25"/><circle cx="520" cy="300" r="25"/></g>
+      <g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M31 300l6 6 12-12"/><path d="M271 300l6 6 12-12"/><path d="M511 300l6 6 12-12"/>
+      </g>
+      <!-- you are here -->
+      <circle cx="700" cy="300" r="30" fill="#2D5BCB" opacity=".15"/>
+      <circle cx="700" cy="300" r="15" fill="#2D5BCB"/>
+      <circle cx="700" cy="300" r="6" fill="#fff"/>
+      <!-- pending stations -->
+      <g fill="#FCFCFD" stroke="#8F5A05" stroke-width="5"><circle cx="820" cy="300" r="17"/><circle cx="1060" cy="300" r="17"/><circle cx="1300" cy="300" r="17"/><circle cx="1540" cy="300" r="17"/></g>
+      <!-- finish flag -->
+      <g transform="translate(1700 300)">
+        <circle r="22" fill="#2D5BCB"/>
+        <path d="M-6 9V-10h13l-3 5 3 5H-6" fill="#fff"/>
+      </g>
+    </svg>
+
+    <div class="phase done" style="left:0;top:20px"><div class="when">Month 1</div><h4>Foundation and baseline</h4><p>Problem, architecture, eval harness, golden questions, dense RAG baseline</p></div>
+    <div class="phase done" style="left:240px;top:420px"><div class="when">Month 2</div><h4>Advanced retrieval and agents</h4><p>Hybrid + RRF, reranking, HyDE, CRAG, Self-RAG, LangGraph, Text2SQL</p></div>
+    <div class="phase done" style="left:480px;top:20px;width:290px"><div class="when">Month 3, to date</div><h4>Safety, speed, interfaces</h4><p>9 guardrail layers, 5-tier cache, streaming API, console, chat memory</p></div>
+
+    <div class="here" style="left:700px;top:228px"><b>Mid-sem, 27 Oct</b></div>
+
+    <div class="phase todo" style="left:780px;top:420px"><div class="when">28 Oct to 8 Nov</div><h4>Evaluation</h4><p>Ragas ablation across seven profiles; scale corpus to 950 noise docs</p></div>
+    <div class="phase todo" style="left:1020px;top:20px;width:270px"><div class="when">9 to 15 Nov</div><h4>Fallback and benchmarks</h4><p>Tavily web fallback; latency, cache and cost measurements</p></div>
+    <div class="phase todo" style="left:1260px;top:420px"><div class="when">16 to 22 Nov</div><h4>Deployment</h4><p>Docker Compose, AWS ECS Fargate, CI pipeline</p></div>
+    <div class="phase todo" style="left:1500px;top:20px;width:228px"><div class="when">23 to 30 Nov</div><h4>Report and demo</h4><p>Final report, end-sem presentation</p></div>
+  </div>
+
+  <div class="legend"><span><i class="st done"></i>Completed</span><span><i class="st todo"></i>Planned</span><span style="color:#2D5BCB;font-weight:600">Expected completion: 30 November 2026</span></div>
+  <div class="pageno mono">04 / 05</div>
+</section>
+
+<!-- =========================================================== 5. LIVE DEMO -->
+<section class="slide s5" data-title="Live demonstration">
+  <div class="chrome">
+    <div class="brand"><svg><use href="#mark"/></svg>SRE-Copilot</div>
+    <div>Mid-semester evaluation, Group 163</div>
+  </div>
+
+  <div class="left">
+    <h2>Live demonstration</h2>
+    <p>The code written so far, executed on this laptop. Everything runs locally: no paid API keys.</p>
+    <div class="steps">
+      <div class="step"><div class="dot">1</div><div><b>Walk through the code</b><span><code>app/core/graph.py</code> <code>app/services/</code> <code>app/security/</code></span></div></div>
+      <div class="step"><div class="dot">2</div><div><b>Start every service</b><span><code>make up</code> Postgres, Redis, Ollama, API, console</span></div></div>
+      <div class="step"><div class="dot">3</div><div><b>Ask, approve, attack</b><span>A docs question, a SQL question with human approval, a blocked injection</span></div></div>
+      <div class="step"><div class="dot">4</div><div><b>Run the test suite</b><span><code>pytest tests/unit</code> 82 tests</span></div></div>
+    </div>
+  </div>
+
+  <div class="shots">
+    <div class="shot a"><img src="assets/shot-rows.png" alt="Console answering a SQL question after human approval"></div>
+    <div class="shot b"><img src="assets/shot-blocked.png" alt="Console blocking a prompt-injection attempt"></div>
+    <div class="cap" style="right:4px;top:722px"><i></i>Real screenshots of the running system</div>
+  </div>
+
+  <div class="thanks">
+    <b>Thank you. We welcome your questions.</b>
+    <span>Sumay Mittal, Yash Kalra, Aditya Ahlawat<br>Supervisor: Dr. Varsha Sisaudia</span>
+  </div>
+</section>
+
+<script>
+  // Title-slide threads: strands pinched at "stations", echoing the product's request-through-checkpoints motif.
+  (function () {
+    const svg = document.getElementById("threads"), NS = "http://www.w3.org/2000/svg"
+    const defs = document.createElementNS(NS, "defs")
+    defs.innerHTML = `
+      <linearGradient id="tg" x1="0" x2="1"><stop offset="0" stop-color="#2D5BCB"/><stop offset=".55" stop-color="#7A9CF0"/><stop offset="1" stop-color="#C9D6FA"/></linearGradient>
+      <filter id="glow" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>`
+    svg.appendChild(defs)
+    const cy = 540, pinches = [1370, 1670, 1970], n = 15
+    const glowG = document.createElementNS(NS, "g"); glowG.setAttribute("filter", "url(#glow)"); glowG.setAttribute("opacity", ".55")
+    const lineG = document.createElementNS(NS, "g")
+    svg.append(glowG, lineG)
+    const env = (x) => { // amplitude: zero at each pinch, swelling between
+      for (let i = 0; i < pinches.length - 1; i++) if (x >= pinches[i] && x <= pinches[i + 1]) return Math.sin(Math.PI * (x - pinches[i]) / (pinches[i + 1] - pinches[i]))
+      return x < pinches[0] ? Math.min(1, (pinches[0] - x) / 260) * 0.9 : 0
+    }
+    for (let k = 0; k < n; k++) {
+      const t = k / (n - 1), amp = 120 + 260 * Math.abs(t - 0.5) * 2, ph = t * Math.PI * 2.2
+      let d = ""
+      for (let x = 1080; x <= 1940; x += 4) {
+        const y = cy + env(x) * amp * Math.sin(x / 95 + ph) * (k % 2 ? 1 : -0.85)
+        d += (x === 1080 ? "M" : "L") + x.toFixed(1) + " " + y.toFixed(1)
+      }
+      const p = document.createElementNS(NS, "path")
+      p.setAttribute("d", d); p.setAttribute("fill", "none"); p.setAttribute("stroke", "url(#tg)")
+      p.setAttribute("stroke-width", (1.3 + (k % 3) * 0.7).toFixed(1)); p.setAttribute("opacity", (0.35 + 0.6 * (1 - Math.abs(t - 0.5) * 2)).toFixed(2))
+      lineG.appendChild(p)
+      if (k % 2 === 0) { const g = p.cloneNode(); g.setAttribute("stroke-width", "5"); glowG.appendChild(g) }
+    }
+    for (const x of pinches.slice(0, 2)) { // stations at the pinch points
+      const halo = document.createElementNS(NS, "circle"); halo.setAttribute("cx", x); halo.setAttribute("cy", cy); halo.setAttribute("r", 30); halo.setAttribute("fill", "#7A9CF0"); halo.setAttribute("opacity", ".18")
+      const dot = document.createElementNS(NS, "circle"); dot.setAttribute("cx", x); dot.setAttribute("cy", cy); dot.setAttribute("r", 10); dot.setAttribute("fill", "#E7EBF3")
+      svg.append(halo, dot)
+    }
+  })()
+</script>
+</body>
+</html>

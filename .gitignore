@@ -68,6 +68,7 @@ seed/docs/noisy_data/*
 *.override.yml
 
 # Secrets / keys
+deploy/LIVE_ACCESS.txt
 *.pem
 *.key
 *.p12
@@ -82,9 +83,11 @@ cache/
 frontend/node_modules/
 frontend/dist/
 
-# Presentation build tooling
-docs/presentation/node_modules/
-docs/presentation/build/
+# Presentation build tooling (also the deck's symlink to it)
+node_modules
+
+# Another team's report, kept locally only as a formatting sample
+docs/endsem-final-presentation/Strict-Sample.pdf
 
 # Deploy bundle (re-embedded vector store, built from .localdev)
 deploy/qdrant/
